@@ -56,15 +56,21 @@ const Book = () => {
             `Lat: ${position.coords.latitude}, Lng: ${position.coords.longitude}`
           );
           setLoadingLocation(false);
-          toast.success("Location retrieved successfully.");
+          toast.success("Location retrieved successfully.",{
+            autoClose:1000
+          });
         },
         () => {
-          toast.error("Could not retrieve location.");
+          toast.error("Could not retrieve location.",{
+            autoClose:1000
+          });
           setLoadingLocation(false);
         }
       );
     } else {
-      toast.error("Geolocation is not supported by this browser.");
+      toast.error("Geolocation is not supported by this browser.",{
+        autoClose:1000
+      });
       setLoadingLocation(false);
     }
   }, []);
@@ -72,7 +78,9 @@ const Book = () => {
   // Handle booking submission
   const handleBooking = async () => {
     if (!parkingId || !endTime || latitude === "" || longitude === "") {
-      toast.warn("Please fill in all fields.");
+      toast.warn("Please fill in all fields.",{
+        autoClose:1000
+      });
       return;
     }
 
@@ -89,7 +97,9 @@ const Book = () => {
     );
 
     if (dayjs(endTimeFormatted).isBefore(startTimeFormatted)) {
-      toast.warn("End time must be after the start time.");
+      toast.warn("End time must be after the start time.",{
+        autoClose:1000
+      });
       return;
     }
 
@@ -125,13 +135,17 @@ const Book = () => {
         // Convert the formatted string to a JavaScript Date object
         const nearestSlotdata = new Date(formattedDate);
         console.log("This is the nearestSlot", nearestSlotdata);
-        toast.info("The nearest availble lsot is at " + nearestSlotdata);
+        toast.info("The nearest availble lsot is at " + nearestSlotdata ,{
+          autoClose:1000
+        });
       } else {
         toast.success("Booking successful!");
         navigate("/home");
       }
     } catch (error) {
-      toast.error("Failed to book parking.");
+      toast.error("Failed to book parking.",{
+        autoClose:1000
+      });
       navigate("/home");
     }
   };

@@ -31,10 +31,14 @@ const Auth = () => {
 
   const validateLogin = () => {
     if (!email.length) {
-      toast.error("Email is required");
+      toast.error("Email is required" , {
+        autoClose:1000
+      });
       return false;
     } else if (!password.length) {
-      toast.error("Password is required");
+      toast.error("Password is required",{
+        autoClose:1000
+      });
       return false;
     }
     return true;
@@ -42,13 +46,19 @@ const Auth = () => {
 
   const validateSignup = () => {
     if (!email.length) {
-      toast.error("Email is required");
+      toast.error("Email is required",{
+        autoClose:1000
+      });
       return false;
     } else if (!password.length) {
-      toast.error("Password is required");
+      toast.error("Password is required",{
+        autoClose:1000
+      });
       return false;
     } else if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error("Passwords do not match",{
+        autoClose:1000
+      });
       return false;
     }
     return true;
@@ -61,11 +71,15 @@ const Auth = () => {
         if (response.data.user) {
           setUserInfo(response.data.user);
           toast.dismiss();
-          toast.success("Successfully Logged in")
+          toast.success("Successfully Logged in",{
+            autoClose:1000
+          })
           navigate("/profile");
         }
       } catch (error) {
-        toast.error("Incorrect Credentials");
+        toast.error("Incorrect Credentials",{
+          autoClose:1000
+        });
       }
     }
   };
@@ -85,7 +99,9 @@ const Auth = () => {
           navigate("/home");
         }
       } catch (error) {
-        toast.error("Signup failed");
+        toast.error("Signup failed",{
+          autoClose:1000
+        });
       }
     }
   };

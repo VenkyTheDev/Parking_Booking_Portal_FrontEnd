@@ -55,11 +55,15 @@ const Profile = () => {
 
   const validateProfile = () => {
     if (!name) {
-      toast.error("Name is required");
+      toast.error("Name is required",{
+        autoClose:1000
+      });
       return false;
     }
     if (!contactNumber) {
-      toast.error("Contact number is required");
+      toast.error("Contact number is required",{
+        autoClose:1000
+      });
       return false;
     }
     return true;
@@ -85,11 +89,15 @@ const Profile = () => {
       console.log("This response is from the update profile", response);
       if (response.status === 202 && response.data) {
         setUserInfo({ ...response.data });
-        toast.success("Profile Updated Successfully");
+        toast.success("Profile Updated Successfully",{
+          autoClose:1000
+        });
         navigate("/sample");
       }
     } catch (error) {
-      toast.error("Failed to update profile");
+      toast.error("Failed to update profile",{
+        autoClose:1000
+      });
     }
   };
 
@@ -100,12 +108,16 @@ const Profile = () => {
     if (!file) return;
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-      toast.error("Invalid file format. Use PNG, JPG, SVG, or WEBP.");
+      toast.error("Invalid file format. Use PNG, JPG, SVG, or WEBP.",{
+        autoClose:1000
+      });
       return;
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      toast.error("File size too large. Maximum allowed is 5MB.");
+      toast.error("File size too large. Maximum allowed is 5MB.",{
+        autoClose:1000
+      });
       return;
     }
 
@@ -137,10 +149,14 @@ const Profile = () => {
         });
     
         setImage(imageUrl);
-        toast.success("Image Updated Successfully");
+        toast.success("Image Updated Successfully",{
+          autoClose:1000
+        });
       }
     } catch (error) {
-      toast.error("Failed to update image");
+      toast.error("Failed to update image",{
+        autoClose:1000
+      });
     }
     
   };
@@ -151,7 +167,9 @@ const Profile = () => {
       const userId = userInfo?.id; // Assuming the user info contains the userId
       
       if (!userId) {
-        toast.error("User ID not found");
+        toast.error("User ID not found",{
+          autoClose:1000
+        });
         return;
       }
   
@@ -173,10 +191,14 @@ const Profile = () => {
         // Optionally reset image preview state
         setImage(null);
   
-        toast.success("Profile image removed successfully");
+        toast.success("Profile image removed successfully",{
+          autoClose:1000
+        });
       }
     } catch (error) {
-      toast.error("Failed to remove image");
+      toast.error("Failed to remove image",{
+        autoClose:1000
+      });
     }
   };
   

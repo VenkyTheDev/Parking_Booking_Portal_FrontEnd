@@ -43,7 +43,9 @@ const Nav = () => {
     try {
       await apiClient.post(LOGOUT_ROUTE);
       toast.dismiss();
-      toast.success("Successfully logged out!");
+      toast.success("Successfully logged out!",{
+        autoClose:1000
+      });
       setUserInfo(null);
       localStorage.removeItem("app-storage");
       navigate("/auth");
