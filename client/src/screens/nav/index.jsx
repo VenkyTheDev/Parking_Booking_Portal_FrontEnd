@@ -39,7 +39,9 @@ const Nav = () => {
   };
 
   const handleLogout = async () => {
-    toast.loading("Logging out...");
+    toast.loading("Logging out...",{
+      autoClose:1000
+    });
     try {
       await apiClient.post(LOGOUT_ROUTE);
       toast.dismiss();
@@ -51,7 +53,9 @@ const Nav = () => {
       navigate("/auth");
     } catch (error) {
       toast.dismiss();
-      toast.error("Logout failed. Please try again.");
+      toast.error("Logout failed. Please try again.",{
+        autoClose:1000
+      });
     }
   };
 

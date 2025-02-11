@@ -19,6 +19,9 @@ export const PARKING_ROUTES = "/api/parking";
 export const ALL_PARKINGS = `${PARKING_ROUTES}/getall`;
 export const NEAREST_SLOT = `${PARKING_ROUTES}/nearestSlot`;
 
-export const ADMIN_ROUTE = "/api/admin";
-export const GET_ALL_PROFILES = `${ADMIN_ROUTE}/getall`;
-export const FLAG_USER = `${ADMIN_ROUTE}/flag`;
+export const ADMIN_ROUTES = "/api/admin";
+export const GET_ALL_PROFILES = `${ADMIN_ROUTES}/getall`;
+export const FLAG_USER = `${ADMIN_ROUTES}/flag`;
+
+export const ORGANISATION_ROUTES = "/api/organisations";
+export const GET_ALL_ORGANISATIONS = `${ORGANISATION_ROUTES}/all`;
