@@ -57,6 +57,8 @@ const Nav = () => {
     setMobileOpen(open);
   };
 
+  console.log("This is the UserInfo from the nav" , userInfo);
+
   return (
     <AppBar
       position="fixed"
@@ -85,9 +87,32 @@ const Nav = () => {
           }}
         >
           <NavLink to="/" style={{ textDecoration: "none", color: "inherit" }}>
-            Portal
+            {userInfo.organisation.name}
           </NavLink>
         </Typography>
+
+        {userInfo.role === "ADMIN" && (
+  <Box sx={{ flexGrow: 2, textAlign: "center" }}>
+    <Typography
+      variant="h6" // A subtle font size
+      color="primary" // Elegant primary color from the theme
+      fontWeight="normal" // Normal weight for a balanced look
+      sx={{
+        textTransform: "uppercase", // Keeps the uppercase look but subtle
+        fontFamily: "'Lora', serif", // Elegant serif font
+        letterSpacing: "1.5px", // A little letter spacing for refinement
+        fontSize: "1.5rem", // Adjust font size to be slightly bigger but still subtle
+        lineHeight: 1.6, // Adds some breathing room for readability
+        opacity: 0.9, // Slight opacity for a more delicate effect
+        textShadow: "1px 1px 4px rgba(0, 0, 0, 0.1)", // A very subtle shadow for depth
+      }}
+    >
+      ADMIN
+    </Typography>
+  </Box>
+)}
+
+
 
         {/* Desktop Navigation */}
         <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>

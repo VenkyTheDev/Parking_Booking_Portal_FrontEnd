@@ -29,7 +29,7 @@ const History = () => {
         const result = await apiClient.get(HISTORY_ROUTE, {
           withCredentials: true, // Ensure cookies are sent with the request
         });
-
+        console.log("This is the history result" , result);
         const response = result.data;
         if (Array.isArray(response)) {
           setBookings(response);

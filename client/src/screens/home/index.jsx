@@ -44,7 +44,7 @@ const Home = () => {
 
   // Check if user has active booking and if they are not an admin
   const hasActiveBooking = activeBookings.length > 0;
-  const isNotAdmin = userInfo.role !== 'admin'; // Assuming the role field holds user role.
+  const isNotAdmin = userInfo.role !== 'ADMIN';
 
   return (
     <>
@@ -70,6 +70,12 @@ const Home = () => {
           <Typography variant="h2" fontWeight="bold" gutterBottom>
             Hassle-Free Parking Just for You!
           </Typography>
+
+          {/* Display the user's name */}
+          <Typography variant="h5" sx={{ opacity: 0.8, mb: 3 }}>
+            Welcome, {userInfo.name}!
+          </Typography>
+
           <Typography variant="h5" sx={{ opacity: 0.8, mb: 3 }}>
             Find, book, and manage your parking spots with ease.
           </Typography>
@@ -112,7 +118,7 @@ const Home = () => {
             <CircularProgress sx={{ color: "#fff" }} />
           ) : error ? (
             <Alert severity="error">{error}</Alert>
-          ) : activeBookings.length === 0 ? (
+          ) : activeBookings.length === 0? (
             <Alert severity="info">No active bookings.</Alert>
           ) : (
             activeBookings.map((booking) => (
