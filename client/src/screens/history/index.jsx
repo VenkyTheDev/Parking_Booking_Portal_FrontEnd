@@ -9,6 +9,7 @@ import {
   Alert,
   Avatar,
   Tooltip,
+  Pagination,
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar"; // Parking icon
@@ -23,28 +24,37 @@ const History = () => {
   const [error, setError] = useState(null);
   const { userInfo } = useAppStore();
 
+  // Pagination state
+  const [page, setPage] = useState(0); // Current page (0-based)
+  const [totalPages, setTotalPages] = useState(0); // Total pages
+  const [totalItems, setTotalItems] = useState(0); // Total items
+
   useEffect(() => {
     const fetchHistory = async () => {
+      setLoading(true); // Start loading before fetching data
       try {
         const result = await apiClient.get(HISTORY_ROUTE, {
+          params: { page, size: 10 }, // Pass page and size for pagination
           withCredentials: true, // Ensure cookies are sent with the request
         });
-        console.log("This is the history result" , result);
-        const response = result.data;
+
+        const response = result.data.bookings;
         if (Array.isArray(response)) {
           setBookings(response);
+          setTotalItems(result.data.totalBookings); // Total bookings count from the API response
+          setTotalPages(Math.ceil(result.data.totalBookings / 10)); // Calculate total pages based on totalBookings
         } else {
           setError("Failed to fetch booking history. Invalid response format.");
         }
       } catch (err) {
         setError("Failed to fetch booking history.");
       } finally {
-        setLoading(false);
+        setLoading(false); // End loading after fetching data
       }
     };
 
     fetchHistory();
-  }, [userInfo.id]);
+  }, [page, userInfo.id]); // Trigger effect when page or userInfo.id changes
 
   const getTimelineWidth = (startTime, endTime) => {
     const dayStart = new Date(new Date().setHours(0, 0, 0, 0)); // Start of the current day (00:00)
@@ -58,28 +68,12 @@ const History = () => {
     return ((normalizedEndTime - normalizedStartTime) / totalDayTime) * 100;
   };
 
-  // const getStartPosition = (startTime) => {
-  //   const dayStart = new Date(new Date().setHours(0, 0, 0, 0)); // Start of the current day (00:00)
-  //   const normalizedStartTime =
-  //     new Date(startTime).getTime() - dayStart.getTime();
-  //   const totalDayTime =
-  //     new Date(new Date().setHours(23, 59, 59, 999)).getTime() -
-  //     dayStart.getTime();
-
-  //   return (normalizedStartTime / totalDayTime) * 100;
-  // };
-
   const getStartPosition = (startTime) => {
     const dayStart = new Date();
     dayStart.setHours(0, 0, 0, 0); // Start of the current day (00:00:00)
   
     const startDate = new Date(startTime); // Convert startTime to a valid JavaScript Date object
   
-    // Check if startTime is valid
-    if (isNaN(startDate.getTime())) {
-      console.error("Invalid start time:", startTime);
-      return 0;
-    }
     const normalizedStartTime = new Date(dayStart); // Copy of the start of the day
     normalizedStartTime.setHours(startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds());
   
@@ -89,11 +83,6 @@ const History = () => {
   
     return normalizedStartPercentage;
   };
-  
-  // Usage
-  const startPosition = getStartPosition(bookings.startTime);
-  console.log("This is the start position", startPosition);
-  
 
   const getTotalBookingHours = (startTime, endTime) => {
     const start = new Date(startTime);
@@ -104,11 +93,8 @@ const History = () => {
     return `${hours}h ${minutes}m`;
   };
 
-  // console.log("This is the history response", bookings);
-
   return (
     <>
-      {console.log("This is the history response", bookings)}
       <Nav />
       <Box
         sx={{
@@ -181,8 +167,6 @@ const History = () => {
                     booking.endTime
                   );
                   const startPosition = getStartPosition(booking.startTime);
-                  console.log("This is the start position", startPosition);
-                  console.log("This is the timeline width", timelineWidth);
                   const totalBookingTime = getTotalBookingHours(
                     booking.startTime,
                     booking.endTime
@@ -314,6 +298,17 @@ const History = () => {
                 })}
             </Grid2>
           )}
+
+          {/* Pagination */}
+          <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
+            <Pagination
+              count={totalPages} // Total number of pages
+              page={page + 1} // 1-based index for MUI pagination
+              onChange={(event, value) => setPage(value - 1)} // Update page state (adjusted for 0-based)
+              color="primary"
+              shape="rounded"
+            />
+          </Box>
         </Box>
       </Box>
     </>
