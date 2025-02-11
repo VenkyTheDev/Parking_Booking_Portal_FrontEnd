@@ -60,6 +60,8 @@ const Auth = () => {
         const response = await apiClient.post(LOGIN_ROUTE, { email, password });
         if (response.data.user) {
           setUserInfo(response.data.user);
+          toast.dismiss();
+          toast.success("Successfully Logged in")
           navigate("/profile");
         }
       } catch (error) {

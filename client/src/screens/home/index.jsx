@@ -14,9 +14,11 @@ import Nav from "../nav";
 import bgImage from "/bgImg.jpg";
 import { apiClient } from "../../lib/api-client";
 import { GET_ACTIVE_BOOKING } from "../../utils/constants";
+import { useAppStore } from "../../store";  // Assuming you have a store that holds user info.
 
 const Home = () => {
   const navigate = useNavigate();
+  const { userInfo } = useAppStore(); // Get user info, assuming it includes a role (e.g. 'admin')
   const [activeBookings, setActiveBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,6 +41,10 @@ const Home = () => {
 
     fetchActiveBookings();
   }, []);
+
+  // Check if user has active booking and if they are not an admin
+  const hasActiveBooking = activeBookings.length > 0;
+  const isNotAdmin = userInfo.role !== 'admin'; // Assuming the role field holds user role.
 
   return (
     <>
@@ -70,8 +76,18 @@ const Home = () => {
           <Button
             variant="contained"
             size="large"
-            sx={{ fontSize: "1.2rem", px: 4, py: 1.5, borderRadius: "30px" }}
+            sx={{
+              fontSize: "1.2rem",
+              px: 4,
+              py: 1.5,
+              borderRadius: "30px",
+              backgroundColor: hasActiveBooking && isNotAdmin ? 'grey' : 'primary.main', // Set the background color conditionally
+              '&:hover': {
+                backgroundColor: hasActiveBooking && isNotAdmin ? 'grey' : 'primary.dark', // Hover effect
+              },
+            }}
             onClick={() => navigate("/parkings")}
+            disabled={hasActiveBooking && isNotAdmin} // Disable button if there's an active booking and user is not admin
           >
             Book a Spot
           </Button>
