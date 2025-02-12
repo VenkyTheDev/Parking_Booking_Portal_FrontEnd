@@ -6,11 +6,10 @@ import { toast } from "react-toastify";
 import EditIcon from "@mui/icons-material/Edit";
 import { useAppStore } from "../../../../store"; // Import your app state hook to get organisationId
 import { apiClient } from "../../../../lib/api-client";
-import { ADD_PARKING } from "../../../../utils/constants";
+import { ADD_PARKING, ADD_PARKING_IMAGE } from "../../../../utils/constants";
 import { useNavigate } from "react-router-dom";
 
 const AddParking = () => {
-  // Assuming organisationId is fetched from global state (useAppStore or any other method)
   const { userInfo } = useAppStore();
   const [organisationId, setOrganisationId] = useState(userInfo.organisation.id);
   const [image, setImage] = useState("");
@@ -25,9 +24,7 @@ const AddParking = () => {
   const handleImageSelect = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file); // Create a local URL for the selected file
-      setImage(imageUrl);
-      toast.success("Image selected successfully!");
+      setImage(file); // Set the image file directly in state
     }
   };
 
@@ -59,24 +56,53 @@ const AddParking = () => {
       organisationId: organisationId,
       highestSlots: highestSlots,
       name: name,
-      image: image,
       latitude: latitude,
       longitude: longitude,
     };
 
     setLoading(true);
     try {
-      const response = await apiClient.post(ADD_PARKING , payload);
-      console.log("This is the resposne after creating a new parking" , response);
-      toast.success("Parking added successfully!");
-      if(response.status === 200){
-        navigate("/parkings");
+      const response = await apiClient.post(ADD_PARKING, payload);
+      console.log("This is the response after creating a new parking", response);
+
+      // Assuming the parking ID is returned in the response
+      const parkingId = response.data.id; // Get the parking ID from the response
+
+      if (image) {
+        // Now upload the image after parking is created
+        await handleImageUpload(parkingId); // Wait for image upload to complete
+      } else {
+        toast.success("Parking added successfully!");
+        navigate("/parkings"); // Navigate to parkings page
       }
     } catch (error) {
       console.error("Error adding parking:", error);
       toast.error("Failed to add parking. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Handle image upload using parking ID
+  const handleImageUpload = async (parkingId) => {
+    const formData = new FormData();
+    formData.append("file", image); // Attach the selected image to the form data
+    formData.append("parkingId", parkingId); // Attach parkingId
+
+    try {
+      // Call the API to upload the image for the parking
+      const response = await apiClient.post(ADD_PARKING_IMAGE, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("This is the response of the add parking image" , response);
+      const uploadedImageUrl = response.data.parkingImage;
+      toast.success("Image uploaded successfully!");
+      navigate("/parkings"); // Navigate to parkings page
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Failed to upload image.");
     }
   };
 
@@ -122,7 +148,7 @@ const AddParking = () => {
               position: "relative",
               width: "250px",
               height: "150px",
-              backgroundImage: image ? `url(${image})` : "none",
+              backgroundImage: image ? `url(${URL.createObjectURL(image)})` : "none", // Display image if available
               backgroundSize: "cover",
               backgroundPosition: "center",
               border: "4px solid white",

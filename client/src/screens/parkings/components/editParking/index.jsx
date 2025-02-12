@@ -44,7 +44,7 @@ const EditParking = () => {
       setName(parkingInfo.name);
     }
 
-  }, [parkingId, navigate, parkingInfo, parkingImage]);
+  }, [parkingId, navigate, parkingInfo, parkingImage , image]);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -60,7 +60,10 @@ const EditParking = () => {
           },
         });
 
+        console.log("This is the response of the add parking image" , response);
+
         const uploadedImageUrl = response.data.parkingImage;
+        console.log("This is the uploadImgUrl" , uploadedImageUrl);
         setImage(`${HOST}/${uploadedImageUrl}`);
 
         setParkingInfo({
@@ -182,7 +185,7 @@ const EditParking = () => {
               position: "relative",
               width: "250px",
               height: "150px",
-              backgroundImage: `url(${HOST}/${image})`,
+              backgroundImage: `url(${image})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               border: "4px solid white",
