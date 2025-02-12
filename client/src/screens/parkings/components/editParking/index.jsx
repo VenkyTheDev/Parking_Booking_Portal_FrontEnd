@@ -12,32 +12,39 @@ import { useAppStore } from "../../../../store";
 const EditParking = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { parkingId, parkingName, parkingImage, parkingSlots, parkingLocation } = location.state || {};
+  const { parkingId, parkingName, parkingImage, parkingSlots, parkingLatitude , parkingLongitude } = location.state || {};
+//   console.log("This is the parking Location from the edit parking", parkingLocation);
 
   const { parkingInfo, setParkingInfo } = useAppStore((state) => state);
 
   const [image, setImage] = useState(parkingImage || "");
   const [name, setName] = useState(parkingName || "");
   const [highestSlots, setHighestSlots] = useState(parkingSlots || 0);
-  const [latitude, setLatitude] = useState(parkingLocation?.latitude || "");
-  const [longitude, setLongitude] = useState(parkingLocation?.longitude || "");
+  const [latitude, setLatitude] = useState(parkingLatitude || "");
+  const [longitude, setLongitude] = useState(parkingLongitude || "");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!parkingId) {
       navigate("/parkings");
+      return;
     }
-  }, [parkingId, navigate]);
 
-  useEffect(() => {
-    if (parkingInfo.name) {
+    // Ensure parkingImage is set correctly whether it's a full URL or a relative path
+    if (parkingInfo && parkingInfo.parkingImage) {
+      const imageUrl = parkingInfo.parkingImage.startsWith("http")
+        ? parkingInfo.parkingImage // If it's already a full URL
+        : `${HOST}/${parkingInfo.parkingImage.replace(/^\/+/, "")}`; // Otherwise, append the host part
+      setImage(imageUrl);
+    } else {
+      setImage(parkingImage || "");  // Fallback if the initial parkingImage is empty
+    }
+
+    if (parkingInfo?.name) {
       setName(parkingInfo.name);
     }
 
-    if (parkingInfo.parkingImage) {
-      setImage(`${HOST}/${parkingInfo.parkingImage.replace(/^\/+/, "")}`);
-    }
-  }, [parkingInfo]);
+  }, [parkingId, navigate, parkingInfo, parkingImage]);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -71,21 +78,21 @@ const EditParking = () => {
 
   const handleFetchLocation = () => {
     toast.info("Fetching location..."); // Show a loading toast when starting to fetch location
-  
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setLatitude(position.coords.latitude);
           setLongitude(position.coords.longitude);
           toast.dismiss();
-          toast.success("Location fetched successfully!",{
-            autoClose : 1000
+          toast.success("Location fetched successfully!", {
+            autoClose: 1000,
           }); // Success toast
         },
         (error) => {
           toast.dismiss();
-          toast.error("Failed to fetch location.",{
-            autoClose : 1000
+          toast.error("Failed to fetch location.", {
+            autoClose: 1000,
           }); // Error toast
         }
       );
@@ -93,36 +100,42 @@ const EditParking = () => {
       toast.error("Geolocation is not supported by this browser."); // Error if geolocation is not supported
     }
   };
-  
 
   const handleSave = async () => {
-
     const payload = {
-        id: parkingId,
-        highestSlots: highestSlots, 
-        name: name,
-        latitude: latitude,
-        longitude: longitude,
-      };
+      id: parkingId,
+      highestSlots: highestSlots,
+      name: name,
+      latitude: latitude,
+      longitude: longitude,
+    };
 
-      console.log("This is my payload for the edit parking" , payload);
+    console.log("This is my payload for the edit parking", payload);
 
-    const response = await apiClient.put(EDIT_PARKING, payload, {
+    try {
+      const response = await apiClient.put(EDIT_PARKING, payload, {
         headers: {
           "Content-Type": "application/json", // Ensure that the request is in JSON format
         },
       });
-      console.log("This is the response of the Edit Parking" , response);
-    setParkingInfo({
-      ...parkingInfo,
-      parkingName: name,
-      parkingSlots: highestSlots,
-      parkingLocation: { latitude, longitude },
-      parkingImage: response.parkingImage,
-    });
-    toast.success("Parking info saved!");
-    if(response.status === 200){
+      console.log("This is the response of the Edit Parking", response);
+
+      setParkingInfo({
+        ...parkingInfo,
+        parkingName: name,
+        parkingSlots: highestSlots,
+        parkingLocation: { latitude, longitude },
+        parkingImage: response.parkingImage, // Assuming you want the updated image URL from the response
+      });
+
+      toast.success("Parking info saved!");
+
+      if (response.status === 200) {
         navigate("/parkings");
+      }
+    } catch (error) {
+      toast.error("Failed to save parking info. Please try again.");
+      console.error("Error saving parking info:", error);
     }
   };
 
@@ -169,7 +182,7 @@ const EditParking = () => {
               position: "relative",
               width: "250px",
               height: "150px",
-              backgroundImage: `url(${image})`,
+              backgroundImage: `url(${HOST}/${image})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               border: "4px solid white",

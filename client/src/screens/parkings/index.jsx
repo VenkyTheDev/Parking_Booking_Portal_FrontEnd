@@ -58,7 +58,7 @@ const Parkings = () => {
   const handleEditParking = (parking) => {
     console.log("This is the before navigate of the edit parking")
     navigate("/editParking", {
-      state: { parkingId: parking.id, parkingName: parking.name, parkingImage: parking.image, parkingSlots: parking.highestSlots },
+      state: { parkingId: parking.id, parkingName: parking.name, parkingImage: parking.parkingImage, parkingSlots: parking.highestSlots ,parkingLatitude : parking.location?.y , parkingLongitude : parking.location?.x },
     });
     console.log("This is the after navigating")
   };
