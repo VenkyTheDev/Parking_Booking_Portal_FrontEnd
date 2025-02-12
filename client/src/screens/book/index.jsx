@@ -56,6 +56,7 @@ const Book = () => {
             `Lat: ${position.coords.latitude}, Lng: ${position.coords.longitude}`
           );
           setLoadingLocation(false);
+          toast.dismiss();
           toast.success("Location retrieved successfully.",{
             autoClose:1000
           });
