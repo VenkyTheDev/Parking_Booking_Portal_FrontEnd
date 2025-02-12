@@ -64,8 +64,7 @@ const Parkings = () => {
   };
 
   const handleAddParking = (e) => {
-    console.log("Add parking clicked");
-    return; // Do nothing for now
+    navigate("/addParking");
 };
 
 

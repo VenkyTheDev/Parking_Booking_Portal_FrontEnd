@@ -24,6 +24,7 @@ export const ADMIN_ROUTES = "/api/admin";
 export const GET_ALL_PROFILES = `${ADMIN_ROUTES}/getall`;
 export const FLAG_USER = `${ADMIN_ROUTES}/flag`;
 export const EDIT_PARKING = `${ADMIN_ROUTES}/editParking`
+export const ADD_PARKING = `${ADMIN_ROUTES}/addParking`
 
 export const ORGANISATION_ROUTES = "/api/organisations";
 export const GET_ALL_ORGANISATIONS = `${ORGANISATION_ROUTES}/all`;
