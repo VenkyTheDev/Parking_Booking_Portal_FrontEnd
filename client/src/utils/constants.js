@@ -18,10 +18,12 @@ export const BOOKING_ROUTE = `${BOOKING_ROUTES}/book`;
 export const PARKING_ROUTES = "/api/parking";
 export const ALL_PARKINGS = `${PARKING_ROUTES}/getall`;
 export const NEAREST_SLOT = `${PARKING_ROUTES}/nearestSlot`;
+export const ADD_PARKING_IMAGE = `${PARKING_ROUTES}/add-parking-image`;
 
 export const ADMIN_ROUTES = "/api/admin";
 export const GET_ALL_PROFILES = `${ADMIN_ROUTES}/getall`;
 export const FLAG_USER = `${ADMIN_ROUTES}/flag`;
+export const EDIT_PARKING = `${ADMIN_ROUTES}/editParking`
 
 export const ORGANISATION_ROUTES = "/api/organisations";
 export const GET_ALL_ORGANISATIONS = `${ORGANISATION_ROUTES}/all`;

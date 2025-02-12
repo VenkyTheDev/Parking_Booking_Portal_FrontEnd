@@ -20,7 +20,8 @@ import {
   Paper,
   InputAdornment,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import SearchIcon from '@mui/icons-material/Search';
+import { MdSearch } from 'react-icons/md';
 import Nav from "../nav";
 import { useAppStore } from "../../store";
 import { apiClient } from "../../lib/api-client";
@@ -174,7 +175,7 @@ const Actions = () => {
               slotProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon />
+                    < MdSearch/>
                   </InputAdornment>
                 ),
               }}

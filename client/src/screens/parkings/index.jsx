@@ -13,18 +13,21 @@ import {
   IconButton,
 } from "@mui/material";
 import { LocationOn } from "@mui/icons-material";
+import EditIcon from '@mui/icons-material/Edit';
 import Nav from "../nav";
 import { apiClient } from "../../lib/api-client";
-import { ALL_PARKINGS } from "../../utils/constants";
+import { ALL_PARKINGS, EDIT_PARKING, HOST } from "../../utils/constants";
 import bgImage from "/bgImg.jpg";
 import Grid2 from "@mui/material/Grid2";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { useAppStore } from "../../store";
 
 const Parkings = () => {
   const navigate = useNavigate();
   const [parkingSpots, setParkingSpots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { userInfo } = useAppStore();
 
   useEffect(() => {
     const fetchParkingSpots = async () => {
@@ -51,6 +54,22 @@ const Parkings = () => {
       state: { parkingId: parking.id, parkingName: parking.name },
     });
   };
+
+  const handleEditParking = (parking) => {
+    console.log("This is the before navigate of the edit parking")
+    navigate("/editParking", {
+      state: { parkingId: parking.id, parkingName: parking.name, parkingImage: parking.image, parkingSlots: parking.highestSlots },
+    });
+    console.log("This is the after navigating")
+  };
+
+  const handleAddParking = (e) => {
+    console.log("Add parking clicked");
+    return; // Do nothing for now
+};
+
+
+console.log("This is the parking spots" , parkingSpots);
 
   return (
     <>
@@ -103,7 +122,7 @@ const Parkings = () => {
                   <CardMedia
                     component="img"
                     height="200"
-                    image={`https://picsum.photos/320/240?random=${parking.id}`} // Random image with fixed aspect ratio (4:3)
+                    image={parking.parkingImage? `${HOST}/${parking.parkingImage}` :`https://picsum.photos/320/240?random=${parking.id}`} // Random image with fixed aspect ratio (4:3)
                     alt={parking.name}
                     sx={{ objectFit: "cover" }}
                   />
@@ -134,6 +153,16 @@ const Parkings = () => {
                       >
                         Book
                       </Button>
+                      {userInfo.role === "ADMIN" && (
+                        <Tooltip title="Edit Parking">
+                          <IconButton
+                            color="primary"
+                            onClick={() => handleEditParking(parking)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
                       <Tooltip title="View Location on Google Maps">
                         <Button
                           variant="contained"
@@ -155,6 +184,24 @@ const Parkings = () => {
               </Grid2>
             ))}
           </Grid2>
+        )}
+        {userInfo?.role === "ADMIN" && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mt: 4,
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddParking}
+              sx={{ borderRadius: "20px", padding: "10px 20px" }}
+            >
+              Add Parking
+            </Button>
+          </Box>
         )}
       </Box>
     </>

@@ -11,7 +11,8 @@ const History = lazy(() => import("./screens/history"));
 const Book = lazy(() => import("./screens/book"));
 const About = lazy(() => import("./screens/about"));
 const Actions = lazy(() => import("./screens/actions"));
-const Parkings = lazy(() => import("./screens/parkings"))
+const Parkings = lazy(() => import("./screens/parkings"));
+const EditParking = lazy(() => import("./screens/parkings/components/editParking")); 
 
 const PrivateRoute = ({ children }) => {
   const { userInfo } = useAppStore();
@@ -114,6 +115,14 @@ const ContentWrapper = () => {
           element={
             <PrivateRoute>
               <About />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/editParking"
+          element={
+            <PrivateRoute>
+              <EditParking/>
             </PrivateRoute>
           }
         />
