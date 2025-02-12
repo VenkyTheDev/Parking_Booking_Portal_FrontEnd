@@ -123,7 +123,15 @@ console.log("This is the parking spots" , parkingSpots);
                     height="200"
                     image={parking.parkingImage? `${HOST}/${parking.parkingImage}` :`https://picsum.photos/320/240?random=${parking.id}`} // Random image with fixed aspect ratio (4:3)
                     alt={parking.name}
-                    sx={{ objectFit: "cover" }}
+                    sx={{
+                      objectFit: "cover", // Ensures the image maintains aspect ratio
+                      width: "100%", // Makes the image take up the full width of the container
+                      height: {
+                        xs: "150px",  // Small screens: 150px height
+                        sm: "200px",  // Medium screens: 200px height
+                        md: "250px",  // Larger screens: 250px height
+                      },
+                    }}
                   />
                   <CardContent
                     sx={{
