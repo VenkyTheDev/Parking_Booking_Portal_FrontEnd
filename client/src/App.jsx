@@ -15,14 +15,14 @@ const Parkings = lazy(() => import("./screens/parkings"))
 
 const PrivateRoute = ({ children }) => {
   const { userInfo } = useAppStore();
-  const isAutheticated = !!userInfo;
-  return isAutheticated ? children : <Navigate to="/auth" />;
+  const isAuthenticated = !!userInfo;
+  return isAuthenticated ? children : <Navigate to="/auth" />;
 };
 
 const AuthRoute = ({ children }) => {
   const { userInfo } = useAppStore();
-  const isAutheticated = !!userInfo;
-  return isAutheticated ? <Navigate to="/home" /> : children;
+  const isAuthenticated = !!userInfo;
+  return isAuthenticated ? <Navigate to="/home" /> : children;
 };
 
 const App = () => {

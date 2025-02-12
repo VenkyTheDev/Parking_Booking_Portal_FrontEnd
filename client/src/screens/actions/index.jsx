@@ -24,7 +24,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import Nav from "../nav";
 import { useAppStore } from "../../store";
 import { apiClient } from "../../lib/api-client";
-import { GET_ALL_PROFILES } from "../../utils/constants";
+import { FLAG_USER, GET_ALL_PROFILES } from "../../utils/constants";
+import bgImage from "/bgImg.jpg";
 
 const Actions = () => {
   const [users, setUsers] = useState([]);
@@ -56,26 +57,47 @@ const Actions = () => {
     fetchUsers();
   }, []);
 
-  // Handle flag/unflag click
   const handleFlagClick = (user) => {
     setSelectedUser(user);
     if (user.allowedAfter > Date.now()) {
-      // User is flagged, directly unflag
       toggleFlag(user.id, 0);
     } else {
-      // User is not flagged, ask for duration
       setOpenDialog(true);
     }
   };
 
-  // Handle API request for flagging/unflagging
+  // const toggleFlag = async (userId, days) => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await apiClient.post(`${FLAG_USER}/${userId}`, days);
+  //     console.log("This is the response of flag", response);
+  //     if (response.status === 200) {
+  //       setUsers((prevUsers) =>
+  //         prevUsers.map((user) =>
+  //           user.id === userId
+  //             ? {
+  //                 ...user,
+  //                 allowedAfter: days > 0 ? Date.now() + days * 86400000 : 0,
+  //               }
+  //             : user
+  //         )
+  //       );
+  //     }
+  //   } catch (err) {
+  //     setError("Failed to update flag status.");
+  //   } finally {
+  //     setLoading(false);
+  //     setOpenDialog(false);
+  //     setFlagDays("");
+  //   }
+  // };
+
   const toggleFlag = async (userId, days) => {
     try {
       setLoading(true);
-      const response = await apiClient.post(`/users/${userId}/flag`, {
-        days: days,
-      });
-
+      const response = await apiClient.post(`${FLAG_USER}/${userId}`,  days ); // Ensure correct payload
+      console.log("Flag API Response:", response);
+  
       if (response.status === 200) {
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
@@ -93,115 +115,148 @@ const Actions = () => {
       setFlagDays("");
     }
   };
+  
 
-  // Filter users based on search query
+  const handleDialogConfirm = () => {
+    if (flagDays && !isNaN(flagDays) && flagDays > 0) {
+      toggleFlag(selectedUser.id, parseInt(flagDays, 10));
+    }
+  };
+
   const filteredUsers = users
-    .filter((user) => user.role !== "ADMIN") // Exclude admins
-    .filter((user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase())
+    .filter((user) => user.role !== "ADMIN")
+    .filter(
+      (user) =>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
   return (
     <>
       <Nav />
-      <Container sx={{ mt: 5, textAlign: "center" }}>
-        <Typography variant="h4" fontWeight="bold" gutterBottom>
-          Manage Users
-        </Typography>
+      <Box
+        sx={{
+          p: 3,
+          width: "100%",
+          mx: "auto",
+          backgroundImage: `url(${bgImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          minHeight: "100vh",
+        }}
+      >
+        <Box
+          sx={{
+            p: 3,
+            background:
+              "linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.2))",
+            backdropFilter: "blur(5px)",
+            borderRadius: "15px",
+            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
+            textAlign: "center",
+          }}
+        >
+          <Typography variant="h4" fontWeight="bold" gutterBottom>
+            Manage Users
+          </Typography>
 
-        {error && <Alert severity="error">{error}</Alert>}
+          {error && <Alert severity="error">{error}</Alert>}
 
-        {/* Search Bar */}
-        <Box sx={{ display: "flex", justifyContent: "center", my: 3 }}>
-          <TextField
-            label="Search by Name or Email"
-            variant="outlined"
-            fullWidth
-            sx={{ maxWidth: 400 }}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                },
+          <Box sx={{ display: "flex", justifyContent: "center", my: 3 }}>
+            <TextField
+              label="Search by Name or Email"
+              variant="outlined"
+              fullWidth
+              sx={{ maxWidth: 400 }}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              slotProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
               }}
-          />
-        </Box>
+            />
+          </Box>
 
-        {/* User Table */}
-        <TableContainer component={Paper} sx={{ mt: 3, borderRadius: 2, boxShadow: 3 }}>
-          <Table>
-            <TableHead sx={{ bgcolor: "#1976D2" }}>
-              <TableRow>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>S.No</TableCell>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>Name</TableCell>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>Email</TableCell>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredUsers.length > 0 ? (
-                filteredUsers.map((user, index) => (
-                  <TableRow key={user.id} sx={{ "&:nth-of-type(odd)": { bgcolor: "#F3F4F6" } }}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{user.name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>
-                      <Button
-                        variant="contained"
-                        color={user.allowedAfter > Date.now() ? "success" : "error"}
-                        onClick={() => handleFlagClick(user)}
-                        disabled={loading}
-                      >
-                        {loading && selectedUser?.id === user.id ? (
-                          <CircularProgress size={20} />
-                        ) : user.allowedAfter > Date.now() ? (
-                          "Unflag"
-                        ) : (
-                          "Flag"
-                        )}
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
+          <TableContainer
+            component={Paper}
+            sx={{ mt: 3, borderRadius: 2, boxShadow: 3 }}
+          >
+            <Table>
+              <TableHead sx={{ bgcolor: "#1976D2" }}>
                 <TableRow>
-                  <TableCell colSpan={4} align="center">
-                    No users found.
+                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                    S.No
+                  </TableCell>
+                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                    Name
+                  </TableCell>
+                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                    Email
+                  </TableCell>
+                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                    Action
                   </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Container>
-
-      {/* Dialog for entering flag duration */}
+              </TableHead>
+              <TableBody>
+                {filteredUsers.length > 0 ? (
+                  filteredUsers.map((user, index) => (
+                    <TableRow
+                      key={user.id}
+                      sx={{ "&:nth-of-type(odd)": { bgcolor: "#F3F4F6" } }}
+                    >
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{user.name}</TableCell>
+                      <TableCell>{user.email}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          color={
+                            user.allowedAfter > Date.now() ? "success" : "error"
+                          }
+                          onClick={() => handleFlagClick(user)}
+                          disabled={loading}
+                        >
+                          {loading && selectedUser?.id === user.id ? (
+                            <CircularProgress size={20} />
+                          ) : user.allowedAfter > Date.now() ? (
+                            "Unflag"
+                          ) : (
+                            "Flag"
+                          )}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={4} align="center">
+                      No users found.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      </Box>
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Enter Flag Duration</DialogTitle>
+        <DialogTitle>Enter Number of Days to Flag</DialogTitle>
         <DialogContent>
           <TextField
-            label="Number of Days"
-            type="number"
             fullWidth
+            type="number"
             value={flagDays}
             onChange={(e) => setFlagDays(e.target.value)}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDialog(false)} color="error">
-            Cancel
-          </Button>
-          <Button
-            onClick={() => toggleFlag(selectedUser.id, parseInt(flagDays))}
-            color="primary"
-            disabled={!flagDays || isNaN(flagDays) || flagDays <= 0}
-          >
+          <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+          <Button onClick={handleDialogConfirm} color="primary">
             Confirm
           </Button>
         </DialogActions>
