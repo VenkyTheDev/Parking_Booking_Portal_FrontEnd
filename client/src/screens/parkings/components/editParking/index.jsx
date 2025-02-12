@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box, TextField, Button, Typography, CircularProgress, IconButton } from "@mui/material";
+import { Box, TextField, Button, Typography, IconButton } from "@mui/material";
 import { apiClient } from "../../../../lib/api-client";
-import { ADD_PARKING_IMAGE, EDIT_PARKING } from "../../../../utils/constants";
+import { ADD_PARKING_IMAGE, EDIT_PARKING, HOST } from "../../../../utils/constants";
 import bgImage from "/bgImg.jpg";
 import Nav from "../../../nav";
 import { toast } from "react-toastify";
-import EditIcon from '@mui/icons-material/Edit'; // Import the edit icon
+import EditIcon from "@mui/icons-material/Edit";
+import { useAppStore } from "../../../../store"; // Import the store to set parking info
 
 const EditParking = () => {
-  console.log("I'm in the edit parking");
   const navigate = useNavigate();
   const location = useLocation();
   const { parkingId, parkingName, parkingImage, parkingSlots, parkingLocation } = location.state || {};
 
-  const [image, setImage] = useState(parkingImage || "");
+  const { parkingInfo, setParkingInfo } = useAppStore((state) => state); // Extract the setParkingInfo function from the store
+
+  const [image, setImage] = useState(parkingImage || ""); // Initialize state with parkingImage from location
   const [name, setName] = useState(parkingName || "");
   const [highestSlots, setHighestSlots] = useState(parkingSlots || 0);
   const [latitude, setLatitude] = useState(parkingLocation?.latitude || "");
@@ -27,25 +29,38 @@ const EditParking = () => {
     }
   }, [parkingId, navigate]);
 
+  useEffect(() => {
+    if (image) {
+      setImage(image);
+    }
+  }, [image]);
+
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("parkingId", parkingId); // Add the parkingId as a FormData field
-  
+      formData.append("parkingId", parkingId);
+
       try {
-        // Correct API URL with query parameter for parkingId
         const response = await apiClient.post(ADD_PARKING_IMAGE, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
-  
-        console.log("This is the response of the edit parking", response);
-  
-        // After a successful upload, set the image and show a success toast
-        setImage(response.data.imageUrl); // Assuming the response contains the image URL
+
+        // Get the new image URL from the response and update both state and store
+        const uploadedImageUrl = response.data.parkingImage;
+        
+        // Set the image state to the new image URL
+        setImage(`${HOST}/${uploadedImageUrl}`);
+
+        // Update the store with the new image URL
+        setParkingInfo({ 
+          ...parkingInfo,
+          parkingImage: uploadedImageUrl
+        });
+
         toast.success("Image uploaded successfully!");
       } catch (error) {
         console.error("Error uploading image:", error);
@@ -54,43 +69,34 @@ const EditParking = () => {
     }
   };
 
-  const handleSave = async () => {
-    setLoading(true);
-    try {
-      // Make API request to update parking details
-      await apiClient.put(`${EDIT_PARKING}/${parkingId}`, {
-        image,
-        name,
-        highestSlots,
-        location: {
-          type: "Point", // Assuming GeoJSON Point for location
-          coordinates: [parseFloat(longitude), parseFloat(latitude)],
-        },
-      });
-      navigate("/parkings"); // Redirect to parkings list page after saving
-    } catch (error) {
-      console.error("Error updating parking", error);
-      toast.error("Failed to save parking details.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchLocation = () => {
+  const handleFetchLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setLatitude(position.coords.latitude);
           setLongitude(position.coords.longitude);
+          toast.success("Location fetched successfully!");
         },
         (error) => {
-          console.error("Error fetching location:", error);
-          alert("Could not fetch location. Please enable location services.");
+          toast.error("Failed to fetch location.");
         }
       );
     } else {
-      alert("Geolocation is not supported by this browser.");
+      toast.error("Geolocation is not supported by this browser.");
     }
+  };
+
+  const handleSave = () => {
+    // Save parking information to store or send it to an API for saving
+    setParkingInfo({
+      ...parkingInfo,
+      parkingName: name,
+      parkingSlots: highestSlots,
+      parkingLocation: { latitude, longitude },
+      parkingImage: image,
+    });
+    toast.success("Parking info saved!");
+    // You can now perform your API call to save the data
   };
 
   return (
@@ -104,61 +110,38 @@ const EditParking = () => {
           backgroundPosition: "center",
           p: 4,
           color: "white",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        <Typography variant="h4" fontWeight="bold" textAlign="center" mb={4}>
+        <Typography variant="h4" fontWeight="bold" mb={4}>
           Edit Parking
         </Typography>
 
         <Box
           sx={{
-            mb: 4,
-            borderRadius: "50%", // Makes the container circular
+            borderRadius: "50%",
             overflow: "hidden",
             position: "relative",
-            width: "150px", // Adjust size as needed
-            height: "150px", // Adjust size as needed
-            backgroundImage: `url(${image})`,
+            width: "150px",
+            height: "150px",
+            backgroundImage: `url(${image})`, // Use the updated image state
             backgroundSize: "cover",
             backgroundPosition: "center",
-            border: "4px solid white", // Add a border to the image (like a profile image)
+            border: "4px solid white",
             boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           {!image && (
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                textAlign: "center",
-                color: "white",
-              }}
-            >
-              <Typography variant="h5">Parking Image</Typography>
-              <Button
-                variant="contained"
-                sx={{
-                  mt: 2,
-                  backgroundColor: "rgba(255, 255, 255, 0.7)",
-                  color: "black",
-                }}
-                onClick={() => document.getElementById("image-upload").click()}
-              >
-                Upload Image
-              </Button>
-              <input
-                id="image-upload"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                style={{ display: "none" }}
-              />
-            </Box>
+            <Typography variant="h5" textAlign="center" color="white">
+              Parking Image
+            </Typography>
           )}
 
-          {/* Edit icon button */}
           <IconButton
             sx={{
               position: "absolute",
@@ -174,92 +157,27 @@ const EditParking = () => {
           >
             <EditIcon />
           </IconButton>
+          <input
+            id="image-upload"
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            style={{ display: "none" }}
+          />
         </Box>
 
-        {loading ? (
-          <CircularProgress sx={{ display: "block", margin: "auto" }} />
-        ) : (
-          <>
-            <TextField
-              label="Parking Name"
-              variant="outlined"
-              fullWidth
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              sx={{
-                mb: 2,
-                backgroundColor: "rgba(255, 255, 255, 0.8)",
-                borderRadius: "8px",
-              }}
-            />
-            <TextField
-              label="Highest Slots"
-              variant="outlined"
-              fullWidth
-              type="number"
-              value={highestSlots}
-              onChange={(e) => setHighestSlots(e.target.value)}
-              sx={{
-                mb: 2,
-                backgroundColor: "rgba(255, 255, 255, 0.8)",
-                borderRadius: "8px",
-              }}
-            />
-            <TextField
-              label="Latitude"
-              variant="outlined"
-              fullWidth
-              type="number"
-              value={latitude}
-              onChange={(e) => setLatitude(e.target.value)}
-              sx={{
-                mb: 2,
-                backgroundColor: "rgba(255, 255, 255, 0.8)",
-                borderRadius: "8px",
-              }}
-            />
-            <TextField
-              label="Longitude"
-              variant="outlined"
-              fullWidth
-              type="number"
-              value={longitude}
-              onChange={(e) => setLongitude(e.target.value)}
-              sx={{
-                mb: 2,
-                backgroundColor: "rgba(255, 255, 255, 0.8)",
-                borderRadius: "8px",
-              }}
-            />
-            <Box display="flex" justifyContent="center" mt={2}>
-              <Button
-                variant="contained"
-                sx={{
-                  borderRadius: "20px",
-                  padding: "10px 20px",
-                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-                }}
-                onClick={fetchLocation}
-              >
-                Get Current Location
-              </Button>
-            </Box>
-            <Box display="flex" justifyContent="center" mt={2}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSave}
-                sx={{
-                  borderRadius: "20px",
-                  padding: "10px 20px",
-                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-                }}
-              >
-                Save
-              </Button>
-            </Box>
-          </>
-        )}
+        <TextField label="Parking Name" fullWidth value={name} onChange={(e) => setName(e.target.value)} sx={{ mt: 3 }} />
+        <TextField label="Highest Slots" fullWidth type="number" value={highestSlots} onChange={(e) => setHighestSlots(e.target.value)} sx={{ mt: 2 }} />
+        <TextField label="Latitude" fullWidth type="number" value={latitude} onChange={(e) => setLatitude(e.target.value)} sx={{ mt: 2 }} />
+        <TextField label="Longitude" fullWidth type="number" value={longitude} onChange={(e) => setLongitude(e.target.value)} sx={{ mt: 2 }} />
+
+        <Button variant="contained" color="primary" onClick={handleFetchLocation} sx={{ mt: 3 }}>
+          Fetch Location
+        </Button>
+
+        <Button variant="contained" color="primary" onClick={handleSave} sx={{ mt: 3 }}>
+          Save
+        </Button>
       </Box>
     </>
   );
