@@ -24,28 +24,6 @@ const EditParking = () => {
   const [longitude, setLongitude] = useState(parkingLongitude || "");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!parkingId) {
-      navigate("/parkings");
-      return;
-    }
-
-    // Ensure parkingImage is set correctly whether it's a full URL or a relative path
-    if (parkingInfo && parkingInfo.parkingImage) {
-      const imageUrl = parkingInfo.parkingImage.startsWith("http")
-        ? parkingInfo.parkingImage // If it's already a full URL
-        : `${HOST}/${parkingInfo.parkingImage.replace(/^\/+/, "")}`; // Otherwise, append the host part
-      setImage(imageUrl);
-    } else {
-      setImage(parkingImage || "");  // Fallback if the initial parkingImage is empty
-    }
-
-    if (parkingInfo?.name) {
-      setName(parkingInfo.name);
-    }
-
-  }, [parkingId, navigate, parkingInfo, parkingImage , image]);
-
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -68,7 +46,7 @@ const EditParking = () => {
 
         setParkingInfo({
           ...parkingInfo,
-          parkingImage: image,
+          parkingImage: uploadedImageUrl,
         });
 
         toast.success("Image uploaded successfully!");
@@ -141,6 +119,28 @@ const EditParking = () => {
       console.error("Error saving parking info:", error);
     }
   };
+
+  useEffect(() => {
+    if (!parkingId) {
+      navigate("/parkings");
+      return;
+    }
+
+    // Ensure parkingImage is set correctly whether it's a full URL or a relative path
+    if (parkingInfo && parkingInfo.parkingImage) {
+      const imageUrl = parkingInfo.parkingImage.startsWith("http")
+        ? parkingInfo.parkingImage // If it's already a full URL
+        : `${HOST}/${parkingInfo.parkingImage.replace(/^\/+/, "")}`; // Otherwise, append the host part
+      setImage(imageUrl);
+    } else {
+      setImage(parkingImage || "");  // Fallback if the initial parkingImage is empty
+    }
+
+    if (parkingInfo?.name) {
+      setName(parkingInfo.name);
+    }
+
+  }, [parkingId, navigate, parkingInfo, parkingImage , image , handleSave]);
 
   return (
     <>

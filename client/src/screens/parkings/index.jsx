@@ -144,8 +144,8 @@ console.log("This is the parking spots" , parkingSpots);
                     <Typography variant="h5" fontWeight="bold" noWrap>
                       {parking.name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {parking.description}
+                    <Typography variant="h7" fontWeight="semi-bold" color="text.secondary" noWrap>
+                      Total Capacity {parking.highestSlots}
                     </Typography>
                     <Box
                       display="flex"

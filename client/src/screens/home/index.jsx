@@ -9,11 +9,16 @@ import {
   CardContent,
   CircularProgress,
   Alert,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
 } from "@mui/material";
 import Nav from "../nav";
 import bgImage from "/bgImg.jpg";
 import { apiClient } from "../../lib/api-client";
-import { GET_ACTIVE_BOOKING } from "../../utils/constants";
+import { GET_ACTIVE_BOOKING, RESCHEDULE_BOOKING, CANCEL_BOOKING } from "../../utils/constants";
 import { useAppStore } from "../../store";  // Assuming you have a store that holds user info.
 
 const Home = () => {
@@ -23,14 +28,18 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Dialogs states
+  const [openRescheduleDialog, setOpenRescheduleDialog] = useState(false);
+  const [openCancelDialog, setOpenCancelDialog] = useState(false);
+  const [newEndTime, setNewEndTime] = useState("");
+  const [selectedBooking, setSelectedBooking] = useState(null);
+
   useEffect(() => {
     const fetchActiveBookings = async () => {
       try {
-        console.log("This is the before result");
         const result = await apiClient.get(GET_ACTIVE_BOOKING, {
           withCredentials: true,
         });
-        console.log("This is the result from the home page", result);
         setActiveBookings(result.data);
       } catch (err) {
         setError("Failed to fetch active bookings.");
@@ -41,6 +50,70 @@ const Home = () => {
 
     fetchActiveBookings();
   }, []);
+
+  const handleRescheduleClick = (booking) => {
+    setSelectedBooking(booking);
+    setOpenRescheduleDialog(true);
+  };
+
+  const handleCancelClick = (booking) => {
+    setSelectedBooking(booking);
+    setOpenCancelDialog(true);
+  };
+
+  const handleRescheduleClose = () => {
+    setOpenRescheduleDialog(false);
+  };
+
+  const handleCancelClose = () => {
+    setOpenCancelDialog(false);
+  };
+
+  const handleRescheduleConfirm = async () => {
+    try {
+      // Get the current date (in yyyy-MM-dd format)
+      const currentDate = new Date(selectedBooking.endTime);
+      const formattedDate = currentDate.toISOString().split('T')[0]; // Get only the date in yyyy-MM-dd format
+      
+      // Combine the current date with the new time
+      const newDateTime = `${formattedDate}T${newEndTime}:00`; // Assuming newEndTime is in HH:mm format
+      
+      // Now call the API with the correctly formatted new end time
+      await apiClient.post(RESCHEDULE_BOOKING, {
+        userId : userInfo.id,
+        bookingId: selectedBooking.bookingId,
+        newEndTime: newDateTime, // Send the correctly formatted datetime string
+      });
+  
+      setOpenRescheduleDialog(false); // Close the dialog
+      // Optionally, refetch the bookings to reflect changes
+      setActiveBookings(activeBookings.map((booking) =>
+        booking.bookingId === selectedBooking.bookingId
+          ? { ...booking, endTime: newDateTime }
+          : booking
+      ));
+      navigate("/home");
+    } catch (err) {
+      navigate("/home");
+      setError("Failed to reschedule booking.");
+    }
+  };
+  
+
+  const handleCancelConfirm = async () => {
+    try {
+      await apiClient.post(`${CANCEL_BOOKING}/${userInfo.id}`, 
+        selectedBooking.bookingId
+      );
+      setOpenCancelDialog(false); // Close the dialog
+      // Optionally, remove the canceled booking from the list
+      setActiveBookings(activeBookings.filter(
+        (booking) => booking.bookingId !== selectedBooking.bookingId
+      ));
+    } catch (err) {
+      setError("Failed to cancel booking.");
+    }
+  };
 
   // Check if user has active booking and if they are not an admin
   const hasActiveBooking = activeBookings.length > 0;
@@ -118,14 +191,11 @@ const Home = () => {
             <CircularProgress sx={{ color: "#fff" }} />
           ) : error ? (
             <Alert severity="error">{error}</Alert>
-          ) : activeBookings.length === 0? (
+          ) : activeBookings.length === 0 ? (
             <Alert severity="info">No active bookings.</Alert>
           ) : (
             activeBookings.map((booking) => (
-              <Card
-                key={booking.bookingId}
-                sx={{ mb: 2, background: "#ffffff" }}
-              >
+              <Card key={booking.bookingId} sx={{ mb: 2, background: "#ffffff" }}>
                 <CardContent>
                   <Typography variant="h6" fontWeight="bold">
                     {booking.bookingId}
@@ -146,12 +216,70 @@ const Home = () => {
                     )}
                     h
                   </Typography>
+                  {/* Reschedule and Cancel Buttons */}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleRescheduleClick(booking)}
+                    sx={{ mt: 2, mr: 2 }}
+                  >
+                    Reschedule
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => handleCancelClick(booking)}
+                    sx={{ mt: 2 }}
+                  >
+                    Cancel
+                  </Button>
                 </CardContent>
               </Card>
             ))
           )}
         </Box>
       </Box>
+
+      {/* Reschedule Dialog */}
+      <Dialog open={openRescheduleDialog} onClose={handleRescheduleClose}>
+        <DialogTitle>Reschedule Booking</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="New End Time"
+            type="time"
+            fullWidth
+            value={newEndTime}
+            onChange={(e) => setNewEndTime(e.target.value)}
+            sx={{ mt: 2 }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            inputProps={{
+              step: 300, // 5 minutes intervals
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleRescheduleClose}>Cancel</Button>
+          <Button onClick={handleRescheduleConfirm}>Confirm</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Cancel Confirmation Dialog */}
+      <Dialog open={openCancelDialog} onClose={handleCancelClose}>
+        <DialogTitle>Are you sure?</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to cancel this booking? This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelClose}>No</Button>
+          <Button onClick={handleCancelConfirm} color="error">
+            Yes, Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

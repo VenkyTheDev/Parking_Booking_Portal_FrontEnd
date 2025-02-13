@@ -14,6 +14,8 @@ export const GET_ACTIVE_BOOKING = `${PROFILE_ROUTES}/activeBookings`;
 export const BOOKING_ROUTES = "/api/bookings";
 export const HISTORY_ROUTE = `${BOOKING_ROUTES}/allhistory`;
 export const BOOKING_ROUTE = `${BOOKING_ROUTES}/book`;
+export const RESCHEDULE_BOOKING = `${BOOKING_ROUTES}/reschedule`;
+export const CANCEL_BOOKING = `${BOOKING_ROUTES}/cancel`;
 
 export const PARKING_ROUTES = "/api/parking";
 export const ALL_PARKINGS = `${PARKING_ROUTES}/getall`;
