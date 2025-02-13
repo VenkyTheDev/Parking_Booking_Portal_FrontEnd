@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { useAppStore } from "../../store";
 import { HOST, LOGOUT_ROUTE } from "../../utils/constants";
 import { apiClient } from "../../lib/api-client";
+import image from "/logo.svg";
 
 const Nav = () => {
   const { userInfo, setUserInfo } = useAppStore(); // Zustand state
@@ -93,7 +94,8 @@ const Nav = () => {
           }}
         >
           <NavLink to="/" style={{ textDecoration: "none", color: "inherit" }}>
-            {userInfo.organisation.name}
+            {/* {userInfo.organisation.name} */} {/* Use the Organisation logo for further */}
+            <img src="/logo.svg" alt="My Image" width={100} height={100} />
           </NavLink>
         </Typography>
 
