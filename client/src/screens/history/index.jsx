@@ -56,6 +56,13 @@ const History = () => {
     fetchHistory();
   }, [page, userInfo.id]); // Trigger effect when page or userInfo.id changes
 
+  const formatTime = (timeString) => {
+    const date = new Date(timeString);
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
   const getTimelineWidth = (startTime, endTime) => {
     const dayStart = new Date(new Date().setHours(0, 0, 0, 0)); // Start of the current day (00:00)
     const dayEnd = new Date(new Date().setHours(23, 59, 59, 999)); // End of the current day (23:59)
@@ -71,16 +78,23 @@ const History = () => {
   const getStartPosition = (startTime) => {
     const dayStart = new Date();
     dayStart.setHours(0, 0, 0, 0); // Start of the current day (00:00:00)
-  
+
     const startDate = new Date(startTime); // Convert startTime to a valid JavaScript Date object
-  
+
     const normalizedStartTime = new Date(dayStart); // Copy of the start of the day
-    normalizedStartTime.setHours(startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), startDate.getMilliseconds());
-  
-    const totalDayTime = new Date(dayStart).setHours(23, 59, 59, 999) - dayStart.getTime();
-  
-    const normalizedStartPercentage = ((normalizedStartTime - dayStart.getTime()) / totalDayTime) * 100;
-  
+    normalizedStartTime.setHours(
+      startDate.getHours(),
+      startDate.getMinutes(),
+      startDate.getSeconds(),
+      startDate.getMilliseconds()
+    );
+
+    const totalDayTime =
+      new Date(dayStart).setHours(23, 59, 59, 999) - dayStart.getTime();
+
+    const normalizedStartPercentage =
+      ((normalizedStartTime - dayStart.getTime()) / totalDayTime) * 100;
+
     return normalizedStartPercentage;
   };
 
@@ -272,6 +286,50 @@ const History = () => {
                                 borderRadius: 5,
                               }}
                             />
+
+                            {/* Start Time */}
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                position: "absolute",
+                                left: `${startPosition}%`,
+                                top: "100%",
+                                fontSize: {
+                                  xs: "8px", // Extra small screens (mobile)
+                                  sm: "10px", // Small screens (tablet)
+                                  md: "12px", // Medium screens (small desktop)
+                                  lg: "14px", // Large screens (large desktop)
+                                },
+                                color: "#000",
+                                transform: "translateX(-50%)", // Center the text at the start position
+                                whiteSpace: "nowrap", // Prevent the text from wrapping
+                                textAlign: "center",
+                              }}
+                            >
+                              {formatTime(booking.startTime)}
+                            </Typography>
+
+                            {/* End Time */}
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                position: "absolute",
+                                left: `${startPosition + timelineWidth}%`, // Position at the end of the bar
+                                top: "100%",
+                                fontSize: {
+                                  xs: "8px", // Extra small screens (mobile)
+                                  sm: "10px", // Small screens (tablet)
+                                  md: "12px", // Medium screens (small desktop)
+                                  lg: "14px", // Large screens (large desktop)
+                                },
+                                color: "#000",
+                                transform: "translateX(-50%)", // Center the text at the end position
+                                whiteSpace: "nowrap", // Prevent the text from wrapping
+                                textAlign: "center",
+                              }}
+                            >
+                              {formatTime(booking.endTime)}
+                            </Typography>
                           </Box>
 
                           {/* Tooltip for total booking hours */}
