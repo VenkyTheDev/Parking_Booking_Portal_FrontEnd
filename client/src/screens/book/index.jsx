@@ -202,6 +202,7 @@ const Book = () => {
                             value={startDate}
                             onChange={setStartDate}
                             renderInput={(params) => <TextField {...params} />}
+                            minDate={dayjs()}
                           />
                           <TimePicker
                             label="Start Time"
@@ -215,6 +216,7 @@ const Book = () => {
                             value={endDate}
                             onChange={setEndDate}
                             renderInput={(params) => <TextField {...params} />}
+                            minDate={dayjs()}
                           />
                         </Stack>
                       </LocalizationProvider>

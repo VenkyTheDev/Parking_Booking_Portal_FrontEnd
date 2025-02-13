@@ -144,10 +144,10 @@ const Home = () => {
     <Typography 
       variant="body2" 
       sx={{ 
-        fontSize: "0.875rem", // Smaller text size
+        fontSize: "1rem", // Smaller text size
         opacity: 0.8, 
         marginBottom: 2, // Add some spacing between the message and other elements
-        color: "warning.main", // You can adjust the color based on your theme (e.g., a warning color)
+        color: "beige", // You can adjust the color based on your theme (e.g., a warning color)
         textAlign: "center", // Center the message on all screens
         maxWidth: "500px", // Ensure the message doesn't stretch too wide
         marginX: "auto", // Center align horizontally
@@ -157,16 +157,18 @@ const Home = () => {
     </Typography>
   )}
 
-  <Typography variant="h2" fontWeight="bold" gutterBottom>
+  <Typography variant="h2" fontWeight="bold" color="beige" gutterBottom>
     Hassle-Free Parking Just for You!
   </Typography>
 
   {/* Display the user's name */}
-  <Typography variant="h5" sx={{ opacity: 0.8, mb: 3 }}>
-    Welcome, {userInfo.name}!
-  </Typography>
+  <Typography variant="h5" sx={{ mb: 3, color: "white", textShadow: "4px 4px 12px rgba(0, 188, 212, 0.9)" }}>
+  Welcome, {userInfo.name}!
+</Typography>
 
-  <Typography variant="h5" sx={{ opacity: 0.8, mb: 3 }}>
+
+
+  <Typography variant="h5" sx={{ opacity: 1, mb: 3 , textShadow: "4px 4px 12px rgba(0, 188, 212, 0.9)" }}>
     Find, book, and manage your parking spots with ease.
   </Typography>
 
@@ -178,7 +180,7 @@ const Home = () => {
       px: 4,
       py: 1.5,
       borderRadius: "30px",
-      backgroundColor: hasActiveBooking && isNotAdmin ? 'grey' : 'primary.main', // Set the background color conditionally
+      backgroundColor: hasActiveBooking && isNotAdmin ? 'rgba(0, 188, 212, 0.9)' : 'primary.main', // Set the background color conditionally
       '&:hover': {
         backgroundColor: hasActiveBooking && isNotAdmin ? 'grey' : 'primary.dark', // Hover effect
       },
