@@ -68,7 +68,7 @@ const EditParking = () => {
 
         setParkingInfo({
           ...parkingInfo,
-          parkingImage: uploadedImageUrl,
+          parkingImage: image,
         });
 
         toast.success("Image uploaded successfully!");
@@ -185,7 +185,7 @@ const EditParking = () => {
               position: "relative",
               width: "250px",
               height: "150px",
-              backgroundImage: `url(${image})`,
+              backgroundImage: `url(${HOST}/${image})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               border: "4px solid white",
