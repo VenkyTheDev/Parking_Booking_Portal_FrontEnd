@@ -130,6 +130,8 @@ const Profile = () => {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       });
+
+      console.log("This is the adding profile response" , response);
     
       if (response.status === 200 && response.data.profilePic) {
         const imageUrl = `${HOST}/${response.data.profilePic.replace(
@@ -138,15 +140,16 @@ const Profile = () => {
         )}`;
     
         // Update state without modifying other properties of userInfo
-        setUserInfo((prev) => {
-          const updatedUserInfo = { ...prev, profilePic: response.data.profilePic };
+        setUserInfo({ ...response.data });
+        // setUserInfo((prev) => {
+        //   const updatedUserInfo = { ...prev, profilePic: response.data.profilePic };
     
-          // Update localStorage with the modified profilePic
-          localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
-          setImage(imageUrl);
+        //   // Update localStorage with the modified profilePic
+        //   localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
+        //   setImage(imageUrl);
     
-          return updatedUserInfo;
-        });
+        //   return updatedUserInfo;
+        // });
     
         setImage(imageUrl);
         toast.success("Image Updated Successfully",{
@@ -163,44 +166,44 @@ const Profile = () => {
 
   const handleDeleteImage = async () => {
     try {
-      // Ensure you're passing userId as a parameter
-      const userId = userInfo?.id; // Assuming the user info contains the userId
+      const userId = userInfo?.id;
       
       if (!userId) {
-        toast.error("User ID not found",{
-          autoClose:1000
+        toast.error("User ID not found", {
+          autoClose: 1000,
         });
         return;
       }
   
       const response = await apiClient.delete(REMOVE_PROFILE_IMAGE_ROUTE, {
-        params: { userId } // Sending the userId as a query parameter
+        params: { userId },
       });
   
-      if (response.status === 202) {
-        // Update userInfo state by setting profilePic to null
-        setUserInfo((prev) => ({
-          ...prev,
-          profilePic: null,
-        }));
+      console.log("This is the response of the delete image", response);
   
-        // Update profilePic to null in local storage
+      if (response.status === 202) {
+        // Update the profilePic to null in state
+        
+        setUserInfo({ ...response.data });
+  
+        // Optionally reset image preview
+        setImage(null);
+  
+        // Update profilePic in local storage
         const updatedUserInfo = { ...userInfo, profilePic: null };
         localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
   
-        // Optionally reset image preview state
-        setImage(null);
-  
-        toast.success("Profile image removed successfully",{
-          autoClose:1000
+        toast.success("Profile image removed successfully", {
+          autoClose: 1000,
         });
       }
     } catch (error) {
-      toast.error("Failed to remove image",{
-        autoClose:1000
+      toast.error("Failed to remove image", {
+        autoClose: 1000,
       });
     }
   };
+  
   
   
   

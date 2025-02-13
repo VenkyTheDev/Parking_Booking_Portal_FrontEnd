@@ -139,38 +139,58 @@ const Home = () => {
           p: 3,
         }}
       >
-        <Container>
-          <Typography variant="h2" fontWeight="bold" gutterBottom>
-            Hassle-Free Parking Just for You!
-          </Typography>
+        <Container sx={{ textAlign: "center" }}>
+  {userInfo.allowedAfter > Date.now() && (
+    <Typography 
+      variant="body2" 
+      sx={{ 
+        fontSize: "0.875rem", // Smaller text size
+        opacity: 0.8, 
+        marginBottom: 2, // Add some spacing between the message and other elements
+        color: "warning.main", // You can adjust the color based on your theme (e.g., a warning color)
+        textAlign: "center", // Center the message on all screens
+        maxWidth: "500px", // Ensure the message doesn't stretch too wide
+        marginX: "auto", // Center align horizontally
+      }}
+    >
+      You are not allowed to book till {new Date(userInfo.allowedAfter).toLocaleString()}
+    </Typography>
+  )}
 
-          {/* Display the user's name */}
-          <Typography variant="h5" sx={{ opacity: 0.8, mb: 3 }}>
-            Welcome, {userInfo.name}!
-          </Typography>
+  <Typography variant="h2" fontWeight="bold" gutterBottom>
+    Hassle-Free Parking Just for You!
+  </Typography>
 
-          <Typography variant="h5" sx={{ opacity: 0.8, mb: 3 }}>
-            Find, book, and manage your parking spots with ease.
-          </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            sx={{
-              fontSize: "1.2rem",
-              px: 4,
-              py: 1.5,
-              borderRadius: "30px",
-              backgroundColor: hasActiveBooking && isNotAdmin ? 'grey' : 'primary.main', // Set the background color conditionally
-              '&:hover': {
-                backgroundColor: hasActiveBooking && isNotAdmin ? 'grey' : 'primary.dark', // Hover effect
-              },
-            }}
-            onClick={() => navigate("/parkings")}
-            disabled={hasActiveBooking && isNotAdmin} // Disable button if there's an active booking and user is not admin
-          >
-            Book a Spot
-          </Button>
-        </Container>
+  {/* Display the user's name */}
+  <Typography variant="h5" sx={{ opacity: 0.8, mb: 3 }}>
+    Welcome, {userInfo.name}!
+  </Typography>
+
+  <Typography variant="h5" sx={{ opacity: 0.8, mb: 3 }}>
+    Find, book, and manage your parking spots with ease.
+  </Typography>
+
+  <Button
+    variant="contained"
+    size="large"
+    sx={{
+      fontSize: "1.2rem",
+      px: 4,
+      py: 1.5,
+      borderRadius: "30px",
+      backgroundColor: hasActiveBooking && isNotAdmin ? 'grey' : 'primary.main', // Set the background color conditionally
+      '&:hover': {
+        backgroundColor: hasActiveBooking && isNotAdmin ? 'grey' : 'primary.dark', // Hover effect
+      },
+    }}
+    onClick={() => navigate("/parkings")}
+    disabled={hasActiveBooking && isNotAdmin || userInfo.allowedAfter > Date.now()} // Disable the button if the user is flagged
+  >
+    Book a Spot
+  </Button>
+</Container>
+
+
 
         {/* Active Bookings Section */}
         <Box

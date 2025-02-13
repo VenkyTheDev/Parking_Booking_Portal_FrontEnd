@@ -137,7 +137,7 @@ const Book = () => {
         const nearestSlotdata = new Date(formattedDate);
         console.log("This is the nearestSlot", nearestSlotdata);
         toast.info("The nearest availble lsot is at " + nearestSlotdata ,{
-          autoClose:1000
+          autoClose:5000
         });
       } else {
         toast.success("Booking successful!");
