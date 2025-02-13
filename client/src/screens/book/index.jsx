@@ -57,20 +57,20 @@ const Book = () => {
           );
           setLoadingLocation(false);
           toast.dismiss();
-          toast.success("Location retrieved successfully.",{
-            autoClose:1000
+          toast.success("Location retrieved successfully.", {
+            autoClose: 1000,
           });
         },
         () => {
-          toast.error("Could not retrieve location.",{
-            autoClose:1000
+          toast.error("Could not retrieve location.", {
+            autoClose: 1000,
           });
           setLoadingLocation(false);
         }
       );
     } else {
-      toast.error("Geolocation is not supported by this browser.",{
-        autoClose:1000
+      toast.error("Geolocation is not supported by this browser.", {
+        autoClose: 1000,
       });
       setLoadingLocation(false);
     }
@@ -79,8 +79,8 @@ const Book = () => {
   // Handle booking submission
   const handleBooking = async () => {
     if (!parkingId || !endTime || latitude === "" || longitude === "") {
-      toast.warn("Please fill in all fields.",{
-        autoClose:1000
+      toast.warn("Please fill in all fields.", {
+        autoClose: 1000,
       });
       return;
     }
@@ -98,8 +98,8 @@ const Book = () => {
     );
 
     if (dayjs(endTimeFormatted).isBefore(startTimeFormatted)) {
-      toast.warn("End time must be after the start time.",{
-        autoClose:1000
+      toast.warn("End time must be after the start time.", {
+        autoClose: 1000,
       });
       return;
     }
@@ -136,16 +136,16 @@ const Book = () => {
         // Convert the formatted string to a JavaScript Date object
         const nearestSlotdata = new Date(formattedDate);
         console.log("This is the nearestSlot", nearestSlotdata);
-        toast.info("The nearest availble lsot is at " + nearestSlotdata ,{
-          autoClose:5000
+        toast.info("The nearest availble lsot is at " + nearestSlotdata, {
+          autoClose: 5000,
         });
       } else {
         toast.success("Booking successful!");
         navigate("/home");
       }
     } catch (error) {
-      toast.error("Failed to book parking.",{
-        autoClose:1000
+      toast.error("Failed to book parking.", {
+        autoClose: 1000,
       });
       navigate("/home");
     }
@@ -226,6 +226,18 @@ const Book = () => {
                   {/* End Time */}
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <Stack spacing={2}>
+                      {userInfo.role === "USER" && (
+                        <>
+                          <DatePicker
+                            label="Date"
+                            value={startDate}
+                            onChange={setStartDate}
+                            renderInput={(params) => <TextField {...params} />}
+                            minDate={dayjs()}
+                            disabled={true}
+                          />
+                        </>
+                      )}
                       <TimePicker
                         label="End Time"
                         value={endTime}
