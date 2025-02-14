@@ -54,6 +54,8 @@ const Parkings = () => {
 
   // Handle navigate to Google Maps
   const handleNavigateToLocation = (lat, lng) => {
+    console.log("This is lat" , lat);
+    console.log("This is long" , lng);
     const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
     window.open(googleMapsUrl, "_blank");
   };
@@ -61,7 +63,7 @@ const Parkings = () => {
   // Handle select parking
   const handleSelectParking = (parking) => {
     navigate("/book", {
-      state: { parkingId: parking.id, parkingName: parking.name },
+      state: { parkingId: parking.id, parkingName: parking.name , parkingLatitude: parking.location.coordinates.at(0) , parkingLongitude: parking.location.coordinates.at(1) },
     });
   };
 
@@ -90,6 +92,8 @@ const Parkings = () => {
     setSelectedHours(selectedHour);
     setEndTime(dayjs().add(selectedHour, "hour").format("YYYY-MM-DDTHH:mm:ss"));
   };
+
+  console.log("This is the parking spots" , parkingSpots);
 
   // Render the parking spots
   return (
@@ -246,8 +250,8 @@ const Parkings = () => {
                           sx={{ ml: 1, minWidth: "40px", borderRadius: "50%" }}
                           onClick={() =>
                             handleNavigateToLocation(
-                              parking.location?.y,
-                              parking.location?.x
+                              parking.location.coordinates.at(1),
+                              parking.location.coordinates.at(0)
                             )
                           }
                         >

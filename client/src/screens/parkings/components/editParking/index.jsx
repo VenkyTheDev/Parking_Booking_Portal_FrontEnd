@@ -15,6 +15,9 @@ const EditParking = () => {
   const { parkingId, parkingName, parkingImage, parkingSlots, parkingLatitude , parkingLongitude } = location.state || {};
 //   console.log("This is the parking Location from the edit parking", parkingLocation);
 
+console.log("This is the parkinglATITUDE" , parkingLatitude);
+console.log("This is the parkingLongitude" , parkingLongitude);
+
   const { parkingInfo, setParkingInfo } = useAppStore((state) => state);
 
   const [image, setImage] = useState(parkingImage || "");
