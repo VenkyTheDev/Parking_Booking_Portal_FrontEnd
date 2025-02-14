@@ -28,7 +28,7 @@ import { toast } from "react-toastify";
 import { useAppStore } from "../../store";
 import { HOST, LOGOUT_ROUTE } from "../../utils/constants";
 import { apiClient } from "../../lib/api-client";
-import image from "/logo.svg";
+import image from "/ongridlogowhite.png";
 
 const Nav = () => {
   const { userInfo, setUserInfo } = useAppStore(); // Zustand state
@@ -77,7 +77,8 @@ const Nav = () => {
     <AppBar
       position="fixed"
       sx={{
-        background: "linear-gradient(135deg, #1a1a2e, #16213e)",
+        // background: "linear-gradient(135deg, #1a1a2e, #16213e)",
+        background : "#33CCCC",
         boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
       }}
     >
@@ -108,7 +109,7 @@ const Nav = () => {
           <NavLink to="/" style={{ textDecoration: "none", color: "inherit" }}>
             {/* {userInfo.organisation.name} */}{" "}
             {/* Use the Organisation logo for further */}
-            <img src="/logo.svg" alt="My Image" width={100} height={100} />
+            <img src={image} alt="My Image" width={100} height={100} />
           </NavLink>
         </Typography>
 

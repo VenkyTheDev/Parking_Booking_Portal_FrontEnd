@@ -12,15 +12,15 @@ import {
   Tooltip,
   IconButton,
 } from "@mui/material";
-import { LocationOn } from "@mui/icons-material";
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Nav from "../nav";
 import { apiClient } from "../../lib/api-client";
-import { ALL_PARKINGS, EDIT_PARKING, HOST } from "../../utils/constants";
+import { ALL_PARKINGS, HOST } from "../../utils/constants";
 import bgImage from "/bgImg.jpg";
 import Grid2 from "@mui/material/Grid2";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useAppStore } from "../../store";
+import dayjs from "dayjs"; // Ensure dayjs is installed
 
 const Parkings = () => {
   const navigate = useNavigate();
@@ -29,11 +29,19 @@ const Parkings = () => {
   const [error, setError] = useState(null);
   const { userInfo } = useAppStore();
 
+  const [selectedHours, setSelectedHours] = useState(1); // Default 1 hour
+  const [endTime, setEndTime] = useState(
+    dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm:ss")
+  ); // Default endTime
+
+  // Function to fetch parking spots
   useEffect(() => {
     const fetchParkingSpots = async () => {
       try {
-        const response = await apiClient.get(ALL_PARKINGS);
-        console.log("This is the response of the parkings", response);
+        setLoading(true);
+        const response = await apiClient.get(
+          `${ALL_PARKINGS}?endTime=${endTime}`
+        );
         setParkingSpots(response.data);
       } catch (error) {
         setError("Failed to fetch parking spots.");
@@ -42,34 +50,48 @@ const Parkings = () => {
       }
     };
     fetchParkingSpots();
-  }, []);
+  }, [endTime]); // Trigger fetch when endTime changes
 
+  // Handle navigate to Google Maps
   const handleNavigateToLocation = (lat, lng) => {
     const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
     window.open(googleMapsUrl, "_blank");
   };
 
+  // Handle select parking
   const handleSelectParking = (parking) => {
     navigate("/book", {
       state: { parkingId: parking.id, parkingName: parking.name },
     });
   };
 
+  // Handle edit parking
   const handleEditParking = (parking) => {
-    console.log("This is the before navigate of the edit parking")
     navigate("/editParking", {
-      state: { parkingId: parking.id, parkingName: parking.name, parkingImage: parking.parkingImage, parkingSlots: parking.highestSlots ,parkingLatitude : parking.location?.y , parkingLongitude : parking.location?.x },
+      state: {
+        parkingId: parking.id,
+        parkingName: parking.name,
+        parkingImage: parking.parkingImage,
+        parkingSlots: parking.highestSlots,
+        parkingLatitude: parking.location?.y,
+        parkingLongitude: parking.location?.x,
+      },
     });
-    console.log("This is the after navigating")
   };
 
-  const handleAddParking = (e) => {
+  // Handle add parking
+  const handleAddParking = () => {
     navigate("/addParking");
-};
+  };
 
+  // Handle end time change
+  const handleEndTimeChange = (event) => {
+    const selectedHour = parseInt(event.target.value, 10);
+    setSelectedHours(selectedHour);
+    setEndTime(dayjs().add(selectedHour, "hour").format("YYYY-MM-DDTHH:mm:ss"));
+  };
 
-console.log("This is the parking spots" , parkingSpots);
-
+  // Render the parking spots
   return (
     <>
       <Nav />
@@ -93,6 +115,36 @@ console.log("This is the parking spots" , parkingSpots);
           Select a Parking Spot
         </Typography>
 
+        {/* Dropdown for selecting endTime */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            mb: 2,
+            zIndex: 10,
+          }}
+        >
+          <select
+            value={selectedHours}
+            onChange={handleEndTimeChange}
+            style={{
+              padding: "10px",
+              fontSize: "16px",
+              backgroundColor: "rgba(255, 255, 255, 0.7)", // Semi-transparent white background
+              color: "#000",
+              borderRadius: "5px",
+              border: "1px solid #ccc",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Optional: Add shadow for better visibility
+            }}
+          >
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((hour) => (
+              <option key={hour} value={hour}>
+                {hour} Hour{hour > 1 ? "s" : ""}
+              </option>
+            ))}
+          </select>
+        </Box>
+
         {loading ? (
           <Box display="flex" justifyContent="center">
             <CircularProgress sx={{ color: "white" }} />
@@ -112,30 +164,33 @@ console.log("This is the parking spots" , parkingSpots);
                     display: "flex",
                     flexDirection: "column",
                     height: "100%",
-                    width: 320, // Set a fixed width for all cards
+                    width: 320,
                     transition: "0.3s",
                     "&:hover": { transform: "scale(1.05)" },
                   }}
                 >
-                  {/* Random image URL for testing, with a fixed aspect ratio */}
                   <CardMedia
                     component="img"
                     height="200"
-                    image={parking.parkingImage? `${HOST}/${parking.parkingImage}` :`https://picsum.photos/320/240?random=${parking.id}`} // Random image with fixed aspect ratio (4:3)
+                    image={
+                      parking.parkingImage
+                        ? `${HOST}/${parking.parkingImage}`
+                        : `https://picsum.photos/320/240?random=${parking.id}`
+                    }
                     alt={parking.name}
                     sx={{
-                      objectFit: "cover", // Ensures the image maintains aspect ratio
-                      width: "100%", // Makes the image take up the full width of the container
+                      objectFit: "cover",
+                      width: "100%",
                       height: {
-                        xs: "150px",  // Small screens: 150px height
-                        sm: "200px",  // Medium screens: 200px height
-                        md: "250px",  // Larger screens: 250px height
+                        xs: "150px",
+                        sm: "200px",
+                        md: "250px",
                       },
                     }}
                   />
                   <CardContent
                     sx={{
-                      flexGrow: 1, // Ensures the content grows to fill remaining space
+                      flexGrow: 1,
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "space-between",
@@ -144,8 +199,22 @@ console.log("This is the parking spots" , parkingSpots);
                     <Typography variant="h5" fontWeight="bold" noWrap>
                       {parking.name}
                     </Typography>
-                    <Typography variant="h7" fontWeight="semi-bold" color="text.secondary" noWrap>
+                    <Typography
+                      variant="h7"
+                      fontWeight="semi-bold"
+                      color="text.secondary"
+                      noWrap
+                    >
                       Total Capacity {parking.highestSlots}
+                    </Typography>
+                    <Typography
+                      variant="h7"
+                      fontWeight="semi-bold"
+                      color="text.secondary"
+                      noWrap
+                    >
+                      Available Slots till {dayjs(endTime).format("HH:mm")}{"Hr"} :- 
+                      {parking.availableSlots}
                     </Typography>
                     <Box
                       display="flex"
@@ -192,14 +261,9 @@ console.log("This is the parking spots" , parkingSpots);
             ))}
           </Grid2>
         )}
+
         {userInfo?.role === "ADMIN" && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              mt: 4,
-            }}
-          >
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
             <Button
               variant="contained"
               color="primary"

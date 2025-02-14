@@ -29,6 +29,8 @@ const ALLOWED_TYPES = [
   "image/jpeg",
   "image/svg+xml",
   "image/webp",
+  "image/heif",
+  "image/heic"
 ];
 
 const Profile = () => {
