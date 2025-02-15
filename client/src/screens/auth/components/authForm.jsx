@@ -4,10 +4,10 @@ import { Google } from "@mui/icons-material";
 
 const AuthForm = ({ tabIndex, setTabIndex, email, setEmail, password, setPassword, confirmPassword, setConfirmPassword, organisationId, setOrganisationId, organisations, name, setName, handleLogin, handleSignup, loading, error }) => {
   return (
-    <Card sx={{ width: { xs: "90%", md: "40%" }, borderRadius: 5, p: 3, backdropFilter: "blur(15px)", bgcolor: "rgba(255, 255, 255, 0.2)", boxShadow: 5 }}>
+    <Card sx={{ width: { xs: "90%", md: "40%" }, borderRadius: 5, p: 3, backdropFilter: "blur(15px)", bgcolor: "rgba(255, 255, 255, 0.2)", boxShadow: 5,backgroundColor: "white"  }}>
       <CardContent>
         <Box textAlign="center" mb={2}>
-          <Typography variant="h4" fontWeight="bold" color="primary">Welcome Back</Typography>
+          <Typography variant="h4" fontWeight="bold" color="primary">Welcome</Typography>
           <Typography variant="body1" color="textSecondary">Sign in or create an account</Typography>
         </Box>
         <Tabs value={tabIndex} onChange={(e, newIndex) => setTabIndex(newIndex)} variant="fullWidth" sx={{ marginBottom: 2 }}>
@@ -19,8 +19,8 @@ const AuthForm = ({ tabIndex, setTabIndex, email, setEmail, password, setPasswor
             <TextField label="Email" type="email" fullWidth value={email} onChange={(e) => setEmail(e.target.value)} />
             <TextField label="Password" type="password" fullWidth value={password} onChange={(e) => setPassword(e.target.value)} />
             <Button variant="contained" color="primary" fullWidth onClick={handleLogin}>Login</Button>
-            <Divider>OR</Divider>
-            <Button variant="outlined" color="primary" fullWidth startIcon={<Google />}>Login with Google</Button>
+            {/* <Divider>OR</Divider>
+            <Button variant="outlined" color="primary" fullWidth startIcon={<Google />}>Login with Google</Button> */}
           </Box>
         ) : (
           <Box display="flex" flexDirection="column" gap={2}>

@@ -60,7 +60,7 @@ const AuthContainer = () => {
   };
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" height="100vh" sx={{ backgroundImage: `url(${bgImage})`, backgroundSize: "cover" }}>
+    <Box display="flex" justifyContent="center" alignItems="center" height="100vh" sx={{ backgroundColor: "#A1E3F9" ,backgroundSize: "cover"}}>
       <AuthForm {...{ tabIndex, setTabIndex, email, setEmail, password, setPassword, confirmPassword, setConfirmPassword, organisationId, setOrganisationId, organisations, name, setName, handleLogin, handleSignup, loading, error }} />
     </Box>
   );

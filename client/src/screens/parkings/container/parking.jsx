@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography, CircularProgress, Alert, Button } from "@mui/material";
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  Alert,
+  Button,
+  TextField,
+} from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import Nav from "../../nav";
 import ParkingCard from "../components/parkingCard";
@@ -16,7 +23,9 @@ const Parkings = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedHours, setSelectedHours] = useState(1);
-  const [endTime, setEndTime] = useState(dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm:ss"));
+  const [endTime, setEndTime] = useState(
+    dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm:ss")
+  );
 
   useEffect(() => {
     const loadParkingSpots = async () => {
@@ -40,7 +49,13 @@ const Parkings = () => {
 
   const handleSelectParking = (parking) => {
     navigate("/book", {
-      state: { parkingId: parking.id, parkingName: parking.name, parkingLatitude: parking.location.coordinates[1], parkingLongitude: parking.location.coordinates[0] , parkingImage: parking.parkingImage },
+      state: {
+        parkingId: parking.id,
+        parkingName: parking.name,
+        parkingLatitude: parking.location.coordinates[1],
+        parkingLongitude: parking.location.coordinates[0],
+        parkingImage: parking.parkingImage,
+      },
     });
   };
 
@@ -68,12 +83,37 @@ const Parkings = () => {
   return (
     <>
       <Nav />
-      <Box sx={{ minHeight: "100vh", backgroundImage: `url(${bgImage})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", p: 4 }}>
-        <Typography variant="h3" fontWeight="bold" textAlign="center" color="white" mb={4}>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          backgroundImage: `url(${bgImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          p: 4,
+        }}
+      >
+        <Typography
+          variant="h3"
+          fontWeight="bold"
+          textAlign="center"
+          color="white"
+          mb={4}
+        >
           Select a Parking Spot
         </Typography>
 
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            mb: 2,
+          }}
+        >
+          <Typography sx={{ mr: 1, fontWeight: "600" }}>
+            Get the available parking spots for the next
+          </Typography>
           <select
             value={selectedHours}
             onChange={handleEndTimeChange}
@@ -88,22 +128,39 @@ const Parkings = () => {
             }}
           >
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((hour) => (
-              <option key={hour} value={hour}>{hour} Hour{hour > 1 ? "s" : ""}</option>
+              <option key={hour} value={hour}>
+                {hour} Hour{hour > 1 ? "s" : ""}
+              </option>
             ))}
           </select>
         </Box>
 
-        {loading ? <CircularProgress /> : error ? <Alert severity="error">{error}</Alert> : (
+        {loading ? (
+          <CircularProgress />
+        ) : error ? (
+          <Alert severity="error">{error}</Alert>
+        ) : (
           <Grid2 container spacing={3} justifyContent="center">
             {parkingSpots.map((parking) => (
               <Grid2 item xs={12} sm={6} md={4} key={parking.id}>
-                <ParkingCard parking={parking} endTime={endTime} userInfo={userInfo} onSelect={handleSelectParking} onEdit={handleEditParking} onNavigate={handleNavigateToLocation} />
+                <ParkingCard
+                  parking={parking}
+                  endTime={endTime}
+                  userInfo={userInfo}
+                  onSelect={handleSelectParking}
+                  onEdit={handleEditParking}
+                  onNavigate={handleNavigateToLocation}
+                />
               </Grid2>
             ))}
           </Grid2>
         )}
 
-        {userInfo?.role === "ADMIN" && <Button variant="contained" onClick={handleAddParking}>Add Parking</Button>}
+        {userInfo?.role === "ADMIN" && (
+          <Button variant="contained" onClick={handleAddParking}>
+            Add Parking
+          </Button>
+        )}
       </Box>
     </>
   );
