@@ -74,7 +74,7 @@ const Profile = () => {
   return (
     <>
       <Nav />
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundImage: `url(${bgImage})`, backgroundSize: "cover" }}>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor : "#A1E3F9", backgroundSize: "cover" }}>
         <ProfileForm
           name={name}
           setName={setName}

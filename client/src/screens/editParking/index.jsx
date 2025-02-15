@@ -1,14 +1,13 @@
 // import React, { useEffect, useState } from "react";
 // import { useLocation, useNavigate } from "react-router-dom";
 // import { Box, TextField, Button, Typography, IconButton } from "@mui/material";
-// import { apiClient } from "../../../../lib/api-client";
-// import { ADD_PARKING_IMAGE, EDIT_PARKING, HOST } from "../../../../utils/constants";
+// import { ADD_PARKING_IMAGE, EDIT_PARKING, HOST } from "../../utils/constants";
 // import bgImage from "/bgImg.jpg";
-// import Nav from "../../../nav";
 // import { toast } from "react-toastify";
 // import EditIcon from "@mui/icons-material/Edit";
-// import { useAppStore } from "../../../../store";
-
+// import Nav from "../nav";
+// import { apiClient } from "../../lib/api-client";
+// import { useAppStore } from "../../store";
 // const EditParking = () => {
 //   const navigate = useNavigate();
 //   const location = useLocation();
@@ -284,3 +283,6 @@
 // };
 
 // export default EditParking;
+
+import EditParking from "./container/editParking";
+export default EditParking;

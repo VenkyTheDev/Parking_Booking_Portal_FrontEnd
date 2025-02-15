@@ -1,67 +1,36 @@
-// import React, { useEffect, useState } from "react";
-// import { useLocation, useNavigate } from "react-router-dom";
+// import React, { useState } from "react";
 // import { Box, TextField, Button, Typography, IconButton } from "@mui/material";
-// import { apiClient } from "../../../../lib/api-client";
-// import { ADD_PARKING_IMAGE, EDIT_PARKING, HOST } from "../../../../utils/constants";
 // import bgImage from "/bgImg.jpg";
-// import Nav from "../../../nav";
 // import { toast } from "react-toastify";
 // import EditIcon from "@mui/icons-material/Edit";
-// import { useAppStore } from "../../../../store";
+// import { ADD_PARKING, ADD_PARKING_IMAGE } from "../../utils/constants";
+// import { useNavigate } from "react-router-dom";
+// import { useAppStore } from "../../store";
+// import Nav from "../nav";
+// import { apiClient } from "../../lib/api-client";
 
-// const EditParking = () => {
-//   const navigate = useNavigate();
-//   const location = useLocation();
-//   const { parkingId, parkingName, parkingImage, parkingSlots, parkingLatitude , parkingLongitude } = location.state || {};
-// //   console.log("This is the parking Location from the edit parking", parkingLocation);
-
-// console.log("This is the parkinglATITUDE" , parkingLatitude);
-// console.log("This is the parkingLongitude" , parkingLongitude);
-
-//   const { parkingInfo, setParkingInfo } = useAppStore((state) => state);
-
-//   const [image, setImage] = useState(parkingImage || "");
-//   const [name, setName] = useState(parkingName || "");
-//   const [highestSlots, setHighestSlots] = useState(parkingSlots || 0);
-//   const [latitude, setLatitude] = useState(parkingLatitude || "");
-//   const [longitude, setLongitude] = useState(parkingLongitude || "");
+// const AddParking = () => {
+//   const { userInfo } = useAppStore();
+//   const [organisationId, setOrganisationId] = useState(userInfo.organisation.id);
+//   const [image, setImage] = useState("");
+//   const [name, setName] = useState("");
+//   const [highestSlots, setHighestSlots] = useState(0);
+//   const [latitude, setLatitude] = useState("");
+//   const [longitude, setLongitude] = useState("");
 //   const [loading, setLoading] = useState(false);
+//   const navigate = useNavigate();
 
-//   const handleImageUpload = async (e) => {
+//   // Handle image selection (no API for now)
+//   const handleImageSelect = (e) => {
 //     const file = e.target.files[0];
 //     if (file) {
-//       const formData = new FormData();
-//       formData.append("file", file);
-//       formData.append("parkingId", parkingId);
-
-//       try {
-//         const response = await apiClient.post(ADD_PARKING_IMAGE, formData, {
-//           headers: {
-//             "Content-Type": "multipart/form-data",
-//           },
-//         });
-
-//         console.log("This is the response of the add parking image" , response);
-
-//         const uploadedImageUrl = response.data.parkingImage;
-//         console.log("This is the uploadImgUrl" , uploadedImageUrl);
-//         setImage(`${HOST}/${uploadedImageUrl}`);
-
-//         setParkingInfo({
-//           ...parkingInfo,
-//           parkingImage: uploadedImageUrl,
-//         });
-
-//         toast.success("Image uploaded successfully!");
-//       } catch (error) {
-//         console.error("Error uploading image:", error);
-//         toast.error("Failed to upload image. Please try again.");
-//       }
+//       setImage(file); // Set the image file directly in state
 //     }
 //   };
 
+//   // Handle location fetch
 //   const handleFetchLocation = () => {
-//     toast.info("Fetching location..."); // Show a loading toast when starting to fetch location
+//     toast.info("Fetching location...");
 
 //     if (navigator.geolocation) {
 //       navigator.geolocation.getCurrentPosition(
@@ -69,81 +38,73 @@
 //           setLatitude(position.coords.latitude);
 //           setLongitude(position.coords.longitude);
 //           toast.dismiss();
-//           toast.success("Location fetched successfully!", {
-//             autoClose: 1000,
-//           }); // Success toast
+//           toast.success("Location fetched successfully!", { autoClose: 1000 });
 //         },
 //         (error) => {
 //           toast.dismiss();
-//           toast.error("Failed to fetch location.", {
-//             autoClose: 1000,
-//           }); // Error toast
+//           toast.error("Failed to fetch location.", { autoClose: 1000 });
 //         }
 //       );
 //     } else {
-//       toast.error("Geolocation is not supported by this browser."); // Error if geolocation is not supported
+//       toast.error("Geolocation is not supported by this browser.");
 //     }
 //   };
 
+//   // Handle save of new parking
 //   const handleSave = async () => {
 //     const payload = {
-//       id: parkingId,
+//       organisationId: organisationId,
 //       highestSlots: highestSlots,
 //       name: name,
 //       latitude: latitude,
 //       longitude: longitude,
 //     };
 
-//     console.log("This is my payload for the edit parking", payload);
-
+//     setLoading(true);
 //     try {
-//       const response = await apiClient.put(EDIT_PARKING, payload, {
-//         headers: {
-//           "Content-Type": "application/json", // Ensure that the request is in JSON format
-//         },
-//       });
-//       console.log("This is the response of the Edit Parking", response);
+//       const response = await apiClient.post(ADD_PARKING, payload);
+//       console.log("This is the response after creating a new parking", response);
 
-//       setParkingInfo({
-//         ...parkingInfo,
-//         parkingName: name,
-//         parkingSlots: highestSlots,
-//         parkingLocation: { latitude, longitude },
-//         parkingImage: response.parkingImage, // Assuming you want the updated image URL from the response
-//       });
+//       // Assuming the parking ID is returned in the response
+//       const parkingId = response.data.id; // Get the parking ID from the response
 
-//       toast.success("Parking info saved!");
-
-//       if (response.status === 200) {
-//         navigate("/parkings");
+//       if (image) {
+//         // Now upload the image after parking is created
+//         await handleImageUpload(parkingId); // Wait for image upload to complete
+//       } else {
+//         toast.success("Parking added successfully!");
+//         navigate("/parkings"); // Navigate to parkings page
 //       }
 //     } catch (error) {
-//       toast.error("Failed to save parking info. Please try again.");
-//       console.error("Error saving parking info:", error);
+//       console.error("Error adding parking:", error);
+//       toast.error("Failed to add parking. Please try again.");
+//     } finally {
+//       setLoading(false);
 //     }
 //   };
 
-//   useEffect(() => {
-//     if (!parkingId) {
-//       navigate("/parkings");
-//       return;
-//     }
+//   // Handle image upload using parking ID
+//   const handleImageUpload = async (parkingId) => {
+//     const formData = new FormData();
+//     formData.append("file", image); // Attach the selected image to the form data
+//     formData.append("parkingId", parkingId); // Attach parkingId
 
-//     // Ensure parkingImage is set correctly whether it's a full URL or a relative path
-//     if (parkingInfo && parkingInfo.parkingImage) {
-//       const imageUrl = parkingInfo.parkingImage.startsWith("http")
-//         ? parkingInfo.parkingImage // If it's already a full URL
-//         : `${HOST}/${parkingInfo.parkingImage.replace(/^\/+/, "")}`; // Otherwise, append the host part
-//       setImage(imageUrl);
-//     } else {
-//       setImage(parkingImage || "");  // Fallback if the initial parkingImage is empty
+//     try {
+//       // Call the API to upload the image for the parking
+//       const response = await apiClient.post(ADD_PARKING_IMAGE, formData, {
+//         headers: {
+//           "Content-Type": "multipart/form-data",
+//         },
+//       });
+//       console.log("This is the response of the add parking image" , response);
+//       const uploadedImageUrl = response.data.parkingImage;
+//       toast.success("Image uploaded successfully!");
+//       navigate("/parkings"); // Navigate to parkings page
+//     } catch (error) {
+//       console.error("Error uploading image:", error);
+//       toast.error("Failed to upload image.");
 //     }
-
-//     if (parkingInfo?.name) {
-//       setName(parkingInfo.name);
-//     }
-
-//   }, [parkingId, navigate, parkingInfo, parkingImage , image , handleSave]);
+//   };
 
 //   return (
 //     <>
@@ -161,7 +122,6 @@
 //           alignItems: "center",
 //         }}
 //       >
-//         {/* Applying the glossy effect */}
 //         <Box
 //           sx={{
 //             p: 3,
@@ -178,7 +138,7 @@
 //           }}
 //         >
 //           <Typography variant="h4" fontWeight="bold" mb={4}>
-//             Edit Parking
+//             Add Parking
 //           </Typography>
 
 //           <Box
@@ -188,7 +148,7 @@
 //               position: "relative",
 //               width: "250px",
 //               height: "150px",
-//               backgroundImage: `url(${HOST}/${image})`,
+//               backgroundImage: image ? `url(${URL.createObjectURL(image)})` : "none", // Display image if available
 //               backgroundSize: "cover",
 //               backgroundPosition: "center",
 //               border: "4px solid white",
@@ -223,7 +183,7 @@
 //               id="image-upload"
 //               type="file"
 //               accept="image/*"
-//               onChange={handleImageUpload}
+//               onChange={handleImageSelect}
 //               style={{ display: "none" }}
 //             />
 //           </Box>
@@ -274,8 +234,9 @@
 //             color="primary"
 //             onClick={handleSave}
 //             sx={{ mt: 3 }}
+//             disabled={loading}
 //           >
-//             Save
+//             {loading ? "Saving..." : "Save"}
 //           </Button>
 //         </Box>
 //       </Box>
@@ -283,4 +244,7 @@
 //   );
 // };
 
-// export default EditParking;
+// export default AddParking;
+
+import AddParking from "./container/addParking";
+export default AddParking;

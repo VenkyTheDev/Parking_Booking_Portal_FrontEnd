@@ -79,8 +79,8 @@ const ActionsContainer = () => {
 
   return (
     <>
-      <Nav/>
-      <Box sx={{ p: 3, width: "100%", mx: "auto", backgroundImage: `url(${bgImage})`, minHeight: "100vh" , backgroundSize: "cover",}}>
+      <Nav/> {/* backgroundImage: `url(${bgImage})` */}
+      <Box sx={{ p: 3, width: "100%", mx: "auto", backgroundColor : "#A1E3F9" , minHeight: "100vh" , backgroundSize: "cover",}}>
         <Box sx={{ p: 3, borderRadius: "15px", boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)", textAlign: "center" }}>
           <Typography variant="h4" fontWeight="bold" gutterBottom>
             Manage Users

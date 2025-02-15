@@ -53,7 +53,8 @@ const History = () => {
           p: 3,
           width: "100%",
           mx: "auto",
-          backgroundImage: `url(${bgImage})`,
+          // backgroundImage: `url(${bgImage})`,
+          backgroundColor: "#A1E3F9",
           backgroundSize: "cover",
           minHeight: "100vh",
         }}

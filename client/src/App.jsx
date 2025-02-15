@@ -12,8 +12,8 @@ const Book = lazy(() => import("./screens/book"));
 const About = lazy(() => import("./screens/about"));
 const Actions = lazy(() => import("./screens/actions"));
 const Parkings = lazy(() => import("./screens/parkings"));
-const EditParking = lazy(() => import("./screens/parkings/components/editParking")); 
-const AddParking = lazy(() => import("./screens/parkings/components/addParking"));
+const EditParking = lazy(() => import("./screens/editParking")); 
+const AddParking = lazy(() => import("./screens/addParking"));
 
 const PrivateRoute = ({ children }) => {
   const { userInfo } = useAppStore();
