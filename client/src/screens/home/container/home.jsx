@@ -67,19 +67,41 @@ const Home = () => {
     }
   };
 
+  // Check if the user has an active booking and is not an admin
+  const hasActiveBooking = activeBookings.length > 0;
+  const isNotAdmin = userInfo.role !== "ADMIN";
+
   return (
     <>
       <Nav />
       <Box sx={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", textAlign: "center", backgroundImage: `url(${bgImage})`, backgroundSize: "cover", color: "white", p: 3 }}>
         <Container sx={{ textAlign: "center" }}>
           <Typography variant="h2" fontWeight="bold" color="beige" gutterBottom>Hassle-Free Parking Just for You!</Typography>
-          <Typography variant="h4" fontWeight="bold" color="beige" gutterBottom>Welocme {userInfo.name} !</Typography>
-          <Button variant="contained" size="large" onClick={() => navigate("/parkings")}>Book a Spot</Button>
+          <Typography variant="h4" fontWeight="bold" color="beige" gutterBottom>Welcome {userInfo.name}!</Typography>
+          
+          <Button 
+            variant="contained" 
+            size="large" 
+            onClick={() => navigate("/parkings")} 
+            disabled={hasActiveBooking && isNotAdmin} // Disable button if user has an active booking and is not admin
+          >
+            Book a Spot
+          </Button>
         </Container>
 
         <Box sx={{ mt: 5, width: "80%", background: "rgba(255, 255, 255, 0.2)", backdropFilter: "blur(10px)", borderRadius: "15px", p: 3 }}>
           <Typography variant="h4" fontWeight="bold" gutterBottom>Active Bookings</Typography>
-          {loading ? <CircularProgress /> : error ? <Alert severity="error">{error}</Alert> : activeBookings.length === 0 ? <Alert severity="info">No active bookings.</Alert> : activeBookings.map((booking) => <BookingCard key={booking.bookingId} booking={booking} onReschedule={handleRescheduleClick} onCancel={handleCancelClick} />)}
+          {loading ? (
+            <CircularProgress />
+          ) : error ? (
+            <Alert severity="error">{error}</Alert>
+          ) : activeBookings.length === 0 ? (
+            <Alert severity="info">No active bookings.</Alert>
+          ) : (
+            activeBookings.map((booking) => (
+              <BookingCard key={booking.bookingId} booking={booking} onReschedule={handleRescheduleClick} onCancel={handleCancelClick} />
+            ))
+          )}
         </Box>
       </Box>
 
