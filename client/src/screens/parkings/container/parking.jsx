@@ -86,7 +86,8 @@ const Parkings = () => {
       <Box
         sx={{
           minHeight: "100vh",
-          backgroundImage: `url(${bgImage})`,
+        //   backgroundImage: `url(${bgImage})`,
+        backgroundColor: "#A1E3F9",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
