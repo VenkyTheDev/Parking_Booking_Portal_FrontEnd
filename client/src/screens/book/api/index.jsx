@@ -1,12 +1,14 @@
+import dayjs from "dayjs";
 import { apiClient } from "../../../lib/api-client";
 import { BOOKING_ROUTE, NEAREST_SLOT } from "../../../utils/constants";
 
-
-export const bookParking = async (bookingData) => {
+export const bookParkingSlot = async (userId, parkingId, startTime, endTime, latitude, longitude) => {
   try {
-    const response = await apiClient.post(BOOKING_ROUTE, bookingData, {
-      withCredentials: true,
-    });
+    const response = await apiClient.post(
+      BOOKING_ROUTE,
+      { userId, parkingId, startTime, endTime, latitude, longitude },
+      { withCredentials: true }
+    );
 
     return response.data;
   } catch (error) {
@@ -16,14 +18,13 @@ export const bookParking = async (bookingData) => {
 
 export const getNearestSlot = async (parkingId, startTime, endTime) => {
   try {
-    const response = await apiClient.post(NEAREST_SLOT, {
-      parkingId,
-      startTime,
-      endTime,
-    });
-
-    return new Date(response.data.replace("T", " "));
+    const response = await apiClient.post(NEAREST_SLOT, { parkingId, startTime, endTime });
+    return response.data.replace("T", " ");
   } catch (error) {
-    throw new Error("Failed to retrieve nearest slot.");
+    throw new Error("Failed to fetch nearest slot.");
   }
+};
+
+export const formatToLocalDateTime = (date, time) => {
+  return dayjs(date).hour(time.hour()).minute(time.minute()).format("YYYY-MM-DDTHH:mm:ss");
 };

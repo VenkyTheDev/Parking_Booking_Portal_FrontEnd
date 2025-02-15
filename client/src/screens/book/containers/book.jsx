@@ -1,39 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Typography,
-  Stack,
-  Divider,
-  TextField,
-  MenuItem,
-} from "@mui/material";
-import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import { Box } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
+import { bookParkingSlot, getNearestSlot, formatToLocalDateTime } from "../api";
+import BookingForm from "../components/bookingForm";
 import { toast } from "react-toastify";
-import dayjs from "dayjs";
-
-
-// import { bookParking, getNearestSlot } from "../../services/bookingService";
 import bgImage from "/bgImg.jpg";
-// import { DateTimePicker } from "@mui/x-date-pickers";
-import LocationFetcher from "../components/locationFetcher";
-import Nav from "../../nav";
-// import { useAppStore } from "../../../store";
-import { bookParking, getNearestSlot } from "../api";
+import dayjs from "dayjs";
 import { useAppStore } from "../../../store";
-import DateTimePicker from "../components/dateTimePicker";
+import Nav from "../../nav";
 
 const Book = () => {
-  const { userInfo } = useAppStore();
+  const {userInfo} = useAppStore();
   const navigate = useNavigate();
   const location = useLocation();
   const parkingData = location.state || {};
 
-  // State Variables
   const [parkingId, setParkingId] = useState(parkingData.parkingId || "");
   const [startDate, setStartDate] = useState(dayjs());
   const [startTime, setStartTime] = useState(dayjs());
@@ -41,18 +23,38 @@ const Book = () => {
   const [endTime, setEndTime] = useState(dayjs());
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
+  const [locationText, setLocationText] = useState("Fetching location...");
+  const [loadingLocation, setLoadingLocation] = useState(true);
 
-  // Handle booking submission
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLatitude(position.coords.latitude);
+          setLongitude(position.coords.longitude);
+          setLocationText(`Lat: ${position.coords.latitude}, Lng: ${position.coords.longitude}`);
+          setLoadingLocation(false);
+          toast.success("Location retrieved successfully.", { autoClose: 1000 });
+        },
+        () => {
+          toast.error("Could not retrieve location.", { autoClose: 1000 });
+          setLoadingLocation(false);
+        }
+      );
+    } else {
+      toast.error("Geolocation is not supported by this browser.", { autoClose: 1000 });
+      setLoadingLocation(false);
+    }
+  }, []);
+
   const handleBooking = async () => {
     if (!parkingId || !endTime || latitude === null || longitude === null) {
       toast.warn("Please fill in all fields.", { autoClose: 1000 });
       return;
     }
 
-    const formatToLocalDateTime = (dateTime) => dayjs(dateTime).format("YYYY-MM-DDTHH:mm:ss");
-
-    let startTimeFormatted = formatToLocalDateTime(dayjs(startDate).hour(startTime.hour()).minute(startTime.minute()));
-    let endTimeFormatted = formatToLocalDateTime(dayjs(endDate).hour(endTime.hour()).minute(endTime.minute()));
+    let startTimeFormatted = formatToLocalDateTime(startDate, startTime);
+    let endTimeFormatted = formatToLocalDateTime(endDate, endTime);
 
     if (dayjs(endTimeFormatted).isBefore(startTimeFormatted)) {
       toast.warn("End time must be after the start time.", { autoClose: 1000 });
@@ -60,14 +62,7 @@ const Book = () => {
     }
 
     try {
-      const response = await bookParking({
-        userId: userInfo.id,
-        parkingId,
-        startTime: startTimeFormatted,
-        endTime: endTimeFormatted,
-        latitude,
-        longitude,
-      });
+      const response = await bookParkingSlot(userInfo.id, parkingId, startTimeFormatted, endTimeFormatted, latitude, longitude);
 
       if (response.statusCode === 400) {
         toast.error(response.errorMessage);
@@ -89,21 +84,24 @@ const Book = () => {
       <Nav />
       <Box sx={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", backgroundImage: `url(${bgImage})`, backgroundSize: "cover", p: 4 }}>
         <Grid2 container spacing={3} justifyContent="center">
-          <Grid2 xs={12} md={6}>
-            <Card sx={{ p: 3, boxShadow: 10, borderRadius: 4, textAlign: "center" }}>
-              <CardContent>
-                <Typography variant="h4" fontWeight="bold">🚗 Confirm Your Booking</Typography>
-                <Divider sx={{ my: 2 }} />
-                <Stack spacing={3}>
-                  <TextField select label="Select Parking Spot" fullWidth value={parkingId} onChange={(e) => setParkingId(e.target.value)} disabled={!!parkingData.parkingId}>
-                    <MenuItem value={parkingId}>{parkingData.parkingName || "Select"}</MenuItem>
-                  </TextField>
-                  <DateTimePicker {...{ startDate, setStartDate, startTime, setStartTime, endDate, setEndDate, endTime, setEndTime, userRole: userInfo.role }} />
-                  <LocationFetcher onLocationRetrieved={(lat, lng) => { setLatitude(lat); setLongitude(lng); }} />
-                  <Button variant="contained" startIcon={<EventAvailableIcon />} onClick={handleBooking}>Book a Slot</Button>
-                </Stack>
-              </CardContent>
-            </Card>
+          <Grid2 item xs={12} md={6}>
+            <BookingForm
+              parkingId={parkingId}
+              setParkingId={setParkingId}
+              parkingData={parkingData}
+              startDate={startDate}
+              setStartDate={setStartDate}
+              startTime={startTime}
+              setStartTime={setStartTime}
+              endDate={endDate}
+              setEndDate={setEndDate}
+              endTime={endTime}
+              setEndTime={setEndTime}
+              loadingLocation={loadingLocation}
+              locationText={locationText}
+              handleBooking={handleBooking}
+              userInfo={userInfo}
+            />
           </Grid2>
         </Grid2>
       </Box>
