@@ -86,8 +86,8 @@ const Parkings = () => {
       <Box
         sx={{
           minHeight: "100vh",
-        //   backgroundImage: `url(${bgImage})`,
-        backgroundColor: "#A1E3F9",
+          //   backgroundImage: `url(${bgImage})`,
+          backgroundColor: "#A1E3F9",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -158,9 +158,11 @@ const Parkings = () => {
         )}
 
         {userInfo?.role === "ADMIN" && (
-          <Button variant="contained" onClick={handleAddParking}>
-            Add Parking
-          </Button>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+            <Button variant="contained" onClick={handleAddParking}>
+              Add Parking
+            </Button>
+          </Box>
         )}
       </Box>
     </>

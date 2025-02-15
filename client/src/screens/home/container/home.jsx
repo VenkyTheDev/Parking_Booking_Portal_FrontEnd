@@ -7,6 +7,7 @@ import {
   Container,
   CircularProgress,
   Alert,
+  Tooltip,
 } from "@mui/material";
 import bgImage from "/bgImg.jpg";
 import RescheduleDialog from "../components/rescheduleDialog";
@@ -117,14 +118,35 @@ const Home = () => {
             Welcome {userInfo.name}!
           </Typography>
 
-          <Button
+          {/* <Button
             variant="contained"
             size="large"
             onClick={() => navigate("/parkings")}
             disabled={hasActiveBooking && isNotAdmin} // Disable button if user has an active booking and is not admin
           >
             Book a Spot
-          </Button>
+          </Button> */}
+          <Tooltip
+            title={
+              hasActiveBooking && isNotAdmin
+                ? "Only one booking at a time per user"
+                : ""
+            }
+            arrow
+          >
+            <span>
+              {" "}
+              {/* Wrapping inside a span to avoid Tooltip issues on disabled elements */}
+              <Button
+                variant="contained"
+                size="large"
+                onClick={() => navigate("/parkings")}
+                disabled={hasActiveBooking && isNotAdmin} // Disable button if user has an active booking and is not admin
+              >
+                Book a Spot
+              </Button>
+            </span>
+          </Tooltip>
         </Container>
 
         <Box

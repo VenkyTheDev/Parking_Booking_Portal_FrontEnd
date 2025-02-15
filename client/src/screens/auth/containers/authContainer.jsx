@@ -41,10 +41,14 @@ const AuthContainer = () => {
     try {
       const response = await login(email, password);
       setUserInfo(response.data.user);
-      toast.success("Successfully Logged in");
+      toast.success("Successfully Logged in" , {
+        autoClose: 1000,
+      });
       navigate("/profile");
     } catch {
-      toast.error("Incorrect Credentials");
+      toast.error("Incorrect Credentials" ,{
+        autoClose: 1000,
+      });
     }
   };
 
