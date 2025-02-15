@@ -25,6 +25,7 @@ const AuthContainer = () => {
       setLoading(true);
       try {
         const response = await fetchOrganisations();
+        console.log("This is the organisations" , response);
         setOrganisations(response.data);
       } catch {
         setError("Failed to load organisations.");

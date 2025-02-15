@@ -376,5 +376,5 @@
 // export default History;
 
 
-import History from "./component/historyComponent";
+import History from "./containers/historyContainer";
 export default History;

@@ -1,14 +1,13 @@
 import { apiClient } from "../../../lib/api-client";
 import { HISTORY_ROUTE } from "../../../utils/constants";
 
+
 export const fetchBookingHistory = async (page) => {
   try {
     const result = await apiClient.get(HISTORY_ROUTE, {
-      params: { page, size: 10 }, // Pass page and size for pagination
+      params: { page, size: 10 },
       withCredentials: true,
     });
-
-    console.log("This is the result from my api" , result);
 
     return {
       bookings: result.data.bookings || [],

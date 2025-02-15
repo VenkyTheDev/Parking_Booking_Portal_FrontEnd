@@ -1,5 +1,5 @@
 import { apiClient } from "../../../lib/api-client";
-import { LOGIN_ROUTE } from "../../../utils/constants";
+import { GET_ALL_ORGANISATIONS, LOGIN_ROUTE } from "../../../utils/constants";
 
 
 

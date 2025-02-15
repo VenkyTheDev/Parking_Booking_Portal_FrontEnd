@@ -1,42 +1,97 @@
-export const formatTime = (timeString) => {
-    const date = new Date(timeString);
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
-  
-  export const getTimelineWidth = (startTime, endTime) => {
-    const dayStart = new Date(new Date().setHours(0, 0, 0, 0));
-    const dayEnd = new Date(new Date().setHours(23, 59, 59, 999));
-  
-    const normalizedStartTime = new Date(startTime).getTime() - dayStart.getTime();
-    const normalizedEndTime = new Date(endTime).getTime() - dayStart.getTime();
-    const totalDayTime = dayEnd.getTime() - dayStart.getTime();
-  
-    return ((normalizedEndTime - normalizedStartTime) / totalDayTime) * 100;
-  };
-  
-  export const getStartPosition = (startTime) => {
-    const dayStart = new Date();
-    dayStart.setHours(0, 0, 0, 0);
-  
-    const startDate = new Date(startTime);
-    const normalizedStartTime = new Date(dayStart);
-    normalizedStartTime.setHours(
-      startDate.getHours(),
-      startDate.getMinutes(),
-      startDate.getSeconds(),
-      startDate.getMilliseconds()
-    );
-  
-    const totalDayTime = new Date(dayStart).setHours(23, 59, 59, 999) - dayStart.getTime();
-    return ((normalizedStartTime - dayStart.getTime()) / totalDayTime) * 100;
-  };
-  
-  export const getTotalBookingHours = (startTime, endTime) => {
-    const start = new Date(startTime);
-    const end = new Date(endTime);
-    const diffInMs = end - start;
-    const hours = Math.floor(diffInMs / (1000 * 60 * 60));
-    const minutes = Math.floor((diffInMs % (1000 * 60 * 60)) / (1000 * 60));
-    return `${hours}h ${minutes}m`;
-  };
-  
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  Alert,
+  Pagination,
+} from "@mui/material";
+import Grid2 from "@mui/material/Grid2";
+import BookingCard from "../component/bookingCard";
+import bgImage from "/bgImg.jpg";
+import Nav from "../../nav";
+import { useAppStore } from "../../../store";
+import { fetchBookingHistory } from "../api";
+
+const History = () => {
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { userInfo } = useAppStore();
+
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+
+  useEffect(() => {
+    const loadHistory = async () => {
+      setLoading(true);
+      try {
+        const { bookings, totalBookings } = await fetchBookingHistory(page);
+
+        const filteredBookings =
+          userInfo.role === "ADMIN"
+            ? bookings
+            : bookings.filter((booking) => booking.user.id === userInfo.id);
+
+        setBookings(filteredBookings);
+        setTotalPages(Math.ceil(totalBookings / 10));
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadHistory();
+  }, [page]);
+
+  return (
+    <>
+      <Nav />
+      <Box
+        sx={{
+          p: 3,
+          width: "100%",
+          mx: "auto",
+          backgroundImage: `url(${bgImage})`,
+          backgroundSize: "cover",
+          minHeight: "100vh",
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{ mb: 2, fontWeight: "bold", textAlign: "center", color: "#fff" }}
+        >
+          🚗 Your History
+        </Typography>
+        {loading ? (
+          <CircularProgress />
+        ) : error ? (
+          <Alert severity="error">{error}</Alert>
+        ) : bookings.length === 0 ? (
+          <Alert severity="info">No bookings found.</Alert>
+        ) : (
+          <Grid2 container spacing={3} justifyContent="center">
+            {bookings.map((booking) => (
+              <Grid2 item xs={12} sm={6} md={4} key={booking.id}>
+                <BookingCard booking={booking} />
+              </Grid2>
+            ))}
+          </Grid2>
+        )}
+
+        {/* Center the pagination */}
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+            <Pagination
+              count={totalPages}
+              page={page + 1}
+              onChange={(e, value) => setPage(value - 1)}
+              color="primary"
+            />
+          </Box>
+      </Box>
+    </>
+  );
+};
+
+export default History;
