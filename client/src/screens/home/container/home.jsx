@@ -16,6 +16,7 @@ import Nav from "../../nav";
 import { useAppStore } from "../../../store";
 import { cancelBooking, fetchActiveBookings, rescheduleBooking } from "../api";
 import BookingCard from "../components/bookingCard";
+import dayjs from "dayjs";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -28,6 +29,10 @@ const Home = () => {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const [newEndTime, setNewEndTime] = useState("");
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const minAllowedTime = dayjs().hour(7).minute(0).second(0); // 7:00 AM
+  const maxAllowedTime = dayjs().hour(18).minute(30).second(0); // 6:30 PM
+
+  // Debugging Logs (Optional - Remove in Production)
 
   useEffect(() => {
     const loadBookings = async () => {
@@ -93,6 +98,11 @@ const Home = () => {
   const hasActiveBooking = activeBookings.length > 0;
   const isNotAdmin = userInfo.role !== "ADMIN";
 
+  console.log("Current Time:", dayjs().format("HH:mm"));
+  console.log("Max Allowed Time:", maxAllowedTime.format("HH:mm"));
+  console.log("Is After 6:30 PM?", dayjs().isAfter(maxAllowedTime));
+  console.log("Is Not Admin:", isNotAdmin);
+
   return (
     <>
       <Nav /> {/* backgroundImage: `url(${bgImage})` */}
@@ -127,26 +137,31 @@ const Home = () => {
             Book a Spot
           </Button> */}
           <Tooltip
-            title={
-              hasActiveBooking && isNotAdmin
-                ? "Only one booking at a time per user"
-                : ""
-            }
-            arrow
-          >
-            <span>
-              {" "}
-              {/* Wrapping inside a span to avoid Tooltip issues on disabled elements */}
-              <Button
-                variant="contained"
-                size="large"
-                onClick={() => navigate("/parkings")}
-                disabled={hasActiveBooking && isNotAdmin} // Disable button if user has an active booking and is not admin
-              >
-                Book a Spot
-              </Button>
-            </span>
-          </Tooltip>
+  title={
+    hasActiveBooking && isNotAdmin
+      ? "Only one active booking per user"
+      : ((dayjs().isBefore(minAllowedTime) || dayjs().isAfter(maxAllowedTime)) && isNotAdmin)
+      ? "You are allowed to book from 7 AM to 6:30 PM"
+      : ""
+  }
+  arrow
+>
+  <span>
+    {/* Wrapping inside a span to avoid Tooltip issues on disabled elements */}
+    <Button
+      variant="contained"
+      size="large"
+      onClick={() => navigate("/parkings")}
+      disabled={
+        (hasActiveBooking && isNotAdmin) ||
+        ((dayjs().isBefore(minAllowedTime) || dayjs().isAfter(maxAllowedTime)) && isNotAdmin)
+      }
+    >
+      Book a Spot
+    </Button>
+  </span>
+</Tooltip>
+
         </Container>
 
         <Box
