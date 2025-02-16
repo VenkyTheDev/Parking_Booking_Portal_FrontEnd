@@ -68,17 +68,9 @@ const BookingCard = ({ booking }) => {
             {booking.parking.name}
           </Typography>
         </Box>
-
-        {/* <Typography variant="body2">
-          📅 Date of booking:{" "}
-          {new Date(booking.startTime).toLocaleString()}
-        </Typography> */}
         <Typography variant="body2">
           📅 Date of booking: {new Date(booking.startTime).toLocaleDateString()}
         </Typography>
-        {/* <Typography variant="body2" sx={{ mb: 2 }}>
-          📅 End Time of booking: {new Date(booking.endTime).toLocaleString()}
-        </Typography> */}
         <Box
           sx={{
             marginTop: 3,
@@ -101,38 +93,47 @@ const BookingCard = ({ booking }) => {
             }}
           />
 
-<Typography
-  sx={{
-    position: "absolute",
-    left: `calc(min(100%, max(0%, ${startPosition}%)))`, // Ensures it stays within 0% - 100%
-    top: -18,
-    fontSize: "0.75rem",
-    transform: "translateX(-50%)",
-    whiteSpace: "nowrap",
-    maxWidth: "100%", // Prevents text from overflowing
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-  }}
->
-  ⏰ Start Time: {new Date(booking.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-</Typography>
+          <Typography
+            sx={{
+              position: "absolute",
+              left: `calc(min(100%, max(0%, ${startPosition}%)))`, // Ensures it stays within 0% - 100%
+              top: -18,
+              fontSize: "0.75rem",
+              transform: "translateX(-50%)",
+              whiteSpace: "nowrap",
+              maxWidth: "100%", // Prevents text from overflowing
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            ⏰ Start Time:{" "}
+            {new Date(booking.startTime).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </Typography>
 
-<Typography
-  sx={{
-    position: "absolute",
-    left: `calc(min(100%, max(0%, ${startPosition + timelineWidth}%)))`, // Ensures it stays within 0% - 100%
-    top: 12,
-    fontSize: "0.75rem",
-    transform: "translateX(-50%)",
-    whiteSpace: "nowrap",
-    maxWidth: "100%", // Prevents text from overflowing
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-  }}
->
-  ⏰ End Time: {new Date(booking.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-</Typography>
-
+          <Typography
+            sx={{
+              position: "absolute",
+              left: `calc(min(100%, max(0%, ${
+                startPosition + timelineWidth
+              }%)))`, // Ensures it stays within 0% - 100%
+              top: 12,
+              fontSize: "0.75rem",
+              transform: "translateX(-50%)",
+              whiteSpace: "nowrap",
+              maxWidth: "100%", // Prevents text from overflowing
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            ⏰ End Time:{" "}
+            {new Date(booking.endTime).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </Typography>
         </Box>
 
         <Tooltip
