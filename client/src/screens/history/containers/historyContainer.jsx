@@ -34,7 +34,7 @@ const History = () => {
             : bookings.filter((booking) => booking.user.id === userInfo.id);
 
         setBookings(filteredBookings);
-        setTotalPages(Math.ceil(totalBookings / 10));
+        setTotalPages(Math.ceil(totalBookings / 8));
       } catch (err) {
         setError(err.message);
       } finally {

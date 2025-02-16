@@ -5,10 +5,10 @@ import { HISTORY_ROUTE } from "../../../utils/constants";
 export const fetchBookingHistory = async (page) => {
   try {
     const result = await apiClient.get(HISTORY_ROUTE, {
-      params: { page, size: 10 },
+      params: { page, size: 8 },
       withCredentials: true,
     });
-
+    console.log("this is the result", result);
     return {
       bookings: result.data.bookings || [],
       totalBookings: result.data.totalBookings || 0,

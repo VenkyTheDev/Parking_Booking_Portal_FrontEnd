@@ -33,8 +33,8 @@ const BookingCard = ({ booking }) => {
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>{booking.parking.name}</Typography>
         </Box>
 
-        <Typography variant="body2">📅 Start Time: {new Date(booking.startTime).toLocaleString()}</Typography>
-        <Typography variant="body2">📅 End Time: {new Date(booking.endTime).toLocaleString()}</Typography>
+        <Typography variant="body2">📅 Start Time of booking: {new Date(booking.startTime).toLocaleString()}</Typography>
+        <Typography variant="body2">📅 End Time of booking: {new Date(booking.endTime).toLocaleString()}</Typography>
 
         {/* Timeline Bar */}
         <Box sx={{ position: "relative", width: "100%", height: 10, backgroundColor: "#f0f0f0", borderRadius: 5 }}>
