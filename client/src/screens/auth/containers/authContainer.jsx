@@ -44,7 +44,7 @@ const AuthContainer = () => {
       toast.success("Successfully Logged in" , {
         autoClose: 1000,
       });
-      navigate("/profile");
+      navigate("/home");
     } catch {
       toast.error("Incorrect Credentials" ,{
         autoClose: 1000,
