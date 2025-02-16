@@ -69,7 +69,7 @@ const EditParking = () => {
   return (
     <>
       <Nav />
-      <Box sx={{ minHeight: "100vh", backgroundImage: `url(${bgImage})`, backgroundSize: "cover", backgroundPosition: "center", p: 4, display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <Box sx={{ minHeight: "100vh", backgroundColor : "#A1E3F9", backgroundSize: "cover", backgroundPosition: "center", p: 4, display: "flex", flexDirection: "column", alignItems: "center" }}>
         <EditParkingForm {...{ name, setName, highestSlots, setHighestSlots, latitude, setLatitude, longitude, setLongitude, handleFetchLocation, handleSave, handleImageUpload, image }} />
       </Box>
     </>
