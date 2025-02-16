@@ -127,41 +127,34 @@ const Home = () => {
           <Typography variant="h4" fontWeight="bold" color="beige" gutterBottom>
             Welcome {userInfo.name}!
           </Typography>
-
-          {/* <Button
-            variant="contained"
-            size="large"
-            onClick={() => navigate("/parkings")}
-            disabled={hasActiveBooking && isNotAdmin} // Disable button if user has an active booking and is not admin
-          >
-            Book a Spot
-          </Button> */}
           <Tooltip
-  title={
-    hasActiveBooking && isNotAdmin
-      ? "Only one active booking per user"
-      : ((dayjs().isBefore(minAllowedTime) || dayjs().isAfter(maxAllowedTime)) && isNotAdmin)
-      ? "You are allowed to book from 7 AM to 6:30 PM"
-      : ""
-  }
-  arrow
->
-  <span>
-    {/* Wrapping inside a span to avoid Tooltip issues on disabled elements */}
-    <Button
-      variant="contained"
-      size="large"
-      onClick={() => navigate("/parkings")}
-      disabled={
-        (hasActiveBooking && isNotAdmin) ||
-        ((dayjs().isBefore(minAllowedTime) || dayjs().isAfter(maxAllowedTime)) && isNotAdmin)
-      }
-    >
-      Book a Spot
-    </Button>
-  </span>
-</Tooltip>
-
+            title={
+              hasActiveBooking && isNotAdmin
+                ? "Only one active booking per user"
+                : (dayjs().isBefore(minAllowedTime) ||
+                    dayjs().isAfter(maxAllowedTime)) &&
+                  isNotAdmin
+                ? "You are allowed to book from 7 AM to 6:30 PM"
+                : ""
+            }
+            arrow
+          >
+            <span>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={() => navigate("/parkings")}
+                disabled={
+                  (hasActiveBooking && isNotAdmin) ||
+                  ((dayjs().isBefore(minAllowedTime) ||
+                    dayjs().isAfter(maxAllowedTime)) &&
+                    isNotAdmin)
+                }
+              >
+                Book a Spot
+              </Button>
+            </span>
+          </Tooltip>
         </Container>
 
         <Box

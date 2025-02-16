@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import {
-  formatTime,
   getTimelineWidth,
   getStartPosition,
   getTotalBookingHours,
@@ -70,23 +69,19 @@ const BookingCard = ({ booking }) => {
           </Typography>
         </Box>
 
-        <Typography variant="body2">
-          📅 Start Time of booking:{" "}
+        {/* <Typography variant="body2">
+          📅 Date of booking:{" "}
           {new Date(booking.startTime).toLocaleString()}
+        </Typography> */}
+        <Typography variant="body2">
+          📅 Date of booking: {new Date(booking.startTime).toLocaleDateString()}
         </Typography>
-        <Typography variant="body2" sx = {{mb: 2}}>
+        {/* <Typography variant="body2" sx={{ mb: 2 }}>
           📅 End Time of booking: {new Date(booking.endTime).toLocaleString()}
-        </Typography>
-
-        {/* Timeline Bar */}
-        {/* <Typography>Start time</Typography>
-        <Box sx={{ position: "relative", width: "100%", height: 10, backgroundColor: "#f0f0f0", borderRadius: 5 }}>
-          <Box sx={{ position: "absolute", left: `${startPosition}%`, width: `${timelineWidth}%`, height: "100%", background: `linear-gradient(90deg, ${statusColor}, transparent)`, borderRadius: 5 }} />
-        </Box>
-        <Typography>End time</Typography> */}
-
+        </Typography> */}
         <Box
           sx={{
+            marginTop: 3,
             position: "relative",
             width: "100%",
             height: 10,
@@ -106,33 +101,38 @@ const BookingCard = ({ booking }) => {
             }}
           />
 
-          {/* Start Time Label - Positioned at Start of Status Bar (Above) */}
-          <Typography
-            sx={{
-              position: "absolute",
-              left: `${startPosition}%`,
-              top: -18, // Moves text above the bar
-              fontSize: "0.75rem", // Tiny font
-              transform: "translateX(-50%)", // Centers text
-              whiteSpace: "nowrap",
-            }}
-          >
-            Start Time {booking.startTime}
-          </Typography>
+<Typography
+  sx={{
+    position: "absolute",
+    left: `calc(min(100%, max(0%, ${startPosition}%)))`, // Ensures it stays within 0% - 100%
+    top: -18,
+    fontSize: "0.75rem",
+    transform: "translateX(-50%)",
+    whiteSpace: "nowrap",
+    maxWidth: "100%", // Prevents text from overflowing
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  }}
+>
+  ⏰ Start Time: {new Date(booking.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+</Typography>
 
-          {/* End Time Label - Positioned at End of Status Bar (Below) */}
-          <Typography
-            sx={{
-              position: "absolute",
-              left: `${startPosition + timelineWidth}%`,
-              top: 12, // Moves text below the bar
-              fontSize: "0.75rem", // Tiny font
-              transform: "translateX(-50%)", // Centers text
-              whiteSpace: "nowrap",
-            }}
-          >
-            End Time {booking.endTime}
-          </Typography>
+<Typography
+  sx={{
+    position: "absolute",
+    left: `calc(min(100%, max(0%, ${startPosition + timelineWidth}%)))`, // Ensures it stays within 0% - 100%
+    top: 12,
+    fontSize: "0.75rem",
+    transform: "translateX(-50%)",
+    whiteSpace: "nowrap",
+    maxWidth: "100%", // Prevents text from overflowing
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  }}
+>
+  ⏰ End Time: {new Date(booking.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+</Typography>
+
         </Box>
 
         <Tooltip
