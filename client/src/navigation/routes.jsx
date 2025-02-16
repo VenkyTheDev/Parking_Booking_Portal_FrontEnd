@@ -1,7 +1,7 @@
 import { lazy } from "react";
 
 export const privateRoutes = [
-  { path: "/home", Component: lazy(() => import("../screens/home/index")) },
+  { path: "/home", Component: lazy(() => import("../screens/home")) },
   { path: "/actions", Component: lazy(() => import("../screens/actions")) },
   { path: "/profile", Component: lazy(() => import("../screens/profile")) },
   { path: "/history", Component: lazy(() => import("../screens/history")) },
