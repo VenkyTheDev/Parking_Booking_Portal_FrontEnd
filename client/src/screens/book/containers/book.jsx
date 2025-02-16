@@ -55,10 +55,19 @@ const Book = () => {
 
     let startTimeFormatted = formatToLocalDateTime(startDate, startTime);
     let endTimeFormatted = formatToLocalDateTime(endDate, endTime);
+    let maxAllowedTime = dayjs().set("hour", 18).set("minute", 30).set("second", 0);
 
     if (dayjs(endTimeFormatted).isBefore(startTimeFormatted)) {
       toast.warn("End time must be after the start time.", { autoClose: 1000 });
       return;
+    }
+
+    if (endDate.isAfter(maxAllowedTime) && userInfo.role !== "ADMIN") {
+      toast.error("Booking is allowed only till 6:30 P.M", {
+        position: "top-center",
+        autoClose: 1000,
+      });
+      return; // Prevent setting an invalid endTime
     }
 
     try {

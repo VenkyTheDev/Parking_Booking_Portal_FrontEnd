@@ -7,6 +7,9 @@ import {
   Alert,
   Button,
   TextField,
+  Select,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import Nav from "../../nav";
@@ -80,6 +83,32 @@ const Parkings = () => {
     setEndTime(dayjs().add(selectedHour, "hour").format("YYYY-MM-DDTHH:mm:ss"));
   };
 
+  const getAvailableHours = () => {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinutes = now.getMinutes();
+
+    const maxHour = 18; // 6:30 PM is 18:30 in 24-hour format
+    const maxMinute = 30;
+
+    let availableHours = [];
+    for (let hour = 1; hour <= 10; hour++) {
+      const endHour = currentHour + hour;
+      const isValid =
+        endHour < maxHour ||
+        (endHour === maxHour && currentMinutes <= maxMinute);
+
+      if (isValid) {
+        availableHours.push(hour);
+      } else {
+        break; // Stop when exceeding 6:30 PM
+      }
+    }
+    return availableHours;
+  };
+
+  const availableHours = getAvailableHours();
+
   return (
     <>
       <Nav />
@@ -112,28 +141,36 @@ const Parkings = () => {
             mb: 2,
           }}
         >
-          <Typography sx={{ mr: 1, fontWeight: "600" }}>
-            Get the available parking spots for the next
-          </Typography>
-          <select
-            value={selectedHours}
-            onChange={handleEndTimeChange}
-            style={{
-              padding: "10px",
-              fontSize: "16px",
-              backgroundColor: "rgba(255, 255, 255, 0.7)",
-              color: "#000",
-              borderRadius: "5px",
-              border: "1px solid #ccc",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-            }}
-          >
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((hour) => (
-              <option key={hour} value={hour}>
-                {hour} Hour{hour > 1 ? "s" : ""}
-              </option>
-            ))}
-          </select>
+          {availableHours.length === 0 ? (
+            <Typography sx={{ mr: 1, fontWeight: "600" }}>
+              Booking allowed till 6:30 PM only
+            </Typography>
+          ) : (
+            <>
+              <Typography sx={{ mr: 1, fontWeight: "600" }}>
+                Get the available parking spots for the next
+              </Typography>
+              <select
+                value={selectedHours}
+                onChange={handleEndTimeChange}
+                style={{
+                  padding: "10px",
+                  fontSize: "16px",
+                  backgroundColor: "rgba(255, 255, 255, 0.7)",
+                  color: "#000",
+                  borderRadius: "5px",
+                  border: "1px solid #ccc",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                }}
+              >
+                {availableHours.map((hour) => (
+                  <option key={hour} value={hour}>
+                    {hour} Hour{hour > 1 ? "s" : ""}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
         </Box>
 
         {loading ? (

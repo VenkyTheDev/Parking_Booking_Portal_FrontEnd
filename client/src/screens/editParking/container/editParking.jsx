@@ -35,7 +35,10 @@ const EditParking = () => {
       if (!file) return;
       const uploadedImageUrl = await uploadParkingImage(parkingId, file);
         setImage(uploadedImageUrl);
-      toast.success("Image uploaded successfully!");
+      toast.success("Image uploaded successfully!",{
+        position: "top-center",
+        autoClose: 1000,
+      });
     } catch (error) {
       toast.error(error.message);
     }
