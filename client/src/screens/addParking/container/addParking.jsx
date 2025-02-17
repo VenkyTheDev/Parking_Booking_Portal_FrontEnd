@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Box } from "@mui/material";
-import bgImage from "/bgImg.jpg";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Nav from "../../nav";
