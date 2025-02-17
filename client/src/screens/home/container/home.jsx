@@ -121,11 +121,11 @@ const Home = () => {
         }}
       >
         <Container sx={{ textAlign: "center" }}>
-          <Typography variant="h2" fontWeight="bold" color="beige" gutterBottom>
+          <Typography variant="h2" fontWeight="bold" color="white" gutterBottom>
             Hassle-Free Parking Just for You!
           </Typography>
-          <Typography variant="h4" fontWeight="bold" color="beige" gutterBottom>
-            Welcome {userInfo.name}!
+          <Typography variant="h4" fontWeight="bold" color="violet" gutterBottom>
+            Welcome Back {userInfo.name}!
           </Typography>
           <Tooltip
             title={
