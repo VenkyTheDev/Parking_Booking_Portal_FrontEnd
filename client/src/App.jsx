@@ -154,11 +154,11 @@ import React, { Suspense } from "react";
 import { BrowserRouter } from "react-router-dom";
 import Navigation from "./navigation"; // Import Navigation
 import "./App.css";
-
+import Grid2 from "@mui/material/Grid2";
 const App = () => {
   return (
     <BrowserRouter>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Grid2>Loading...</Grid2>}>
         <Navigation /> {/* Use Navigation component */}
       </Suspense>
     </BrowserRouter>
