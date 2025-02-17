@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { login, signup, fetchOrganisations } from "../api/api"
 import AuthForm from "../components/authForm";
-import bgImage from "/bgImg.jpg";
 import { useAppStore } from "../../../store";
 
 const AuthContainer = () => {
