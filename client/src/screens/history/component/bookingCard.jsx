@@ -106,7 +106,7 @@ const BookingCard = ({ booking }) => {
               textOverflow: "ellipsis",
             }}
           >
-            ⏰ Start Time:{" "}
+            ⏰{" "}
             {new Date(booking.startTime).toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
@@ -128,7 +128,7 @@ const BookingCard = ({ booking }) => {
               textOverflow: "ellipsis",
             }}
           >
-            ⏰ End Time:{" "}
+            ⏰{" "}
             {new Date(booking.endTime).toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",

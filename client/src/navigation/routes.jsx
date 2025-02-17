@@ -10,6 +10,7 @@ export const privateRoutes = [
   { path: "/about", Component: lazy(() => import("../screens/about")) },
   { path: "/editParking", Component: lazy(() => import("../screens/editParking")) },
   { path: "/addParking", Component: lazy(() => import("../screens/addParking")) },
+  { path: "/organisations", Component: lazy(() => import("../screens/organisation")) },  
 ];
 
 export const publicRoutes = [

@@ -24,6 +24,7 @@ import {
   Book,
 } from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
+import ApartmentIcon from "@mui/icons-material/Apartment";
 
 const NavComponent = ({
   userInfo,
@@ -55,9 +56,17 @@ const NavComponent = ({
         </IconButton>
 
         {/* Brand Logo */}
-        <Typography variant="h6" sx={{ flexGrow: 1, cursor: "pointer", fontWeight: "bold" }}>
+        <Typography
+          variant="h6"
+          sx={{ flexGrow: 1, cursor: "pointer", fontWeight: "bold" }}
+        >
           <NavLink to="/" style={{ textDecoration: "none", color: "inherit" }}>
-            <img src="/ongridlogowhite.png" alt="Logo" width={100} height={100} />
+            <img
+              src="/ongridlogowhite.png"
+              alt="Logo"
+              width={100}
+              height={100}
+            />
           </NavLink>
         </Typography>
 
@@ -84,18 +93,48 @@ const NavComponent = ({
 
         {/* Desktop Navigation */}
         <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
-          <Button color="inherit" startIcon={<Home />} component={NavLink} to="/home">
+          <Button
+            color="inherit"
+            startIcon={<Home />}
+            component={NavLink}
+            to="/home"
+          >
             Home
           </Button>
           {userInfo?.role === "ADMIN" && (
-            <Button color="inherit" startIcon={<AccountCircle />} component={NavLink} to="/actions">
-              Actions
-            </Button>
+            <>
+              <Button
+                color="inherit"
+                startIcon={<AccountCircle />}
+                component={NavLink}
+                to="/actions"
+              >
+                Actions
+              </Button>
+              <Button
+                color="inherit"
+                startIcon={<ApartmentIcon />}
+                component={NavLink}
+                to="/organisations"
+              >
+                Organisations
+              </Button>
+            </>
           )}
-          <Button color="inherit" startIcon={<Book />} component={NavLink} to="/history">
+          <Button
+            color="inherit"
+            startIcon={<Book />}
+            component={NavLink}
+            to="/history"
+          >
             My Bookings
           </Button>
-          <Button color="inherit" startIcon={<Info />} component={NavLink} to="/about">
+          <Button
+            color="inherit"
+            startIcon={<Info />}
+            component={NavLink}
+            to="/about"
+          >
             About
           </Button>
         </Box>
@@ -108,8 +147,17 @@ const NavComponent = ({
                 {!userInfo.profilePic && userInfo.name?.charAt(0)}
               </Avatar>
             </IconButton>
-            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose} sx={{ mt: 1 }}>
-              <MenuItem component={NavLink} to="/profile" onClick={handleMenuClose}>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              sx={{ mt: 1 }}
+            >
+              <MenuItem
+                component={NavLink}
+                to="/profile"
+                onClick={handleMenuClose}
+              >
                 <AccountCircle sx={{ mr: 1 }} /> Profile
               </MenuItem>
               <Divider />
@@ -127,22 +175,60 @@ const NavComponent = ({
 
       {/* Mobile Drawer */}
       <Drawer anchor="left" open={mobileOpen} onClose={toggleDrawer(false)}>
-        <List sx={{ width: 250, background: "#16213e", height: "100%", color: "white" }}>
-          <ListItem button component={NavLink} to="/home" onClick={toggleDrawer(false)}>
+        <List
+          sx={{
+            width: 250,
+            background: "#16213e",
+            height: "100%",
+            color: "white",
+          }}
+        >
+          <ListItem
+            button
+            component={NavLink}
+            to="/home"
+            onClick={toggleDrawer(false)}
+          >
             <Home sx={{ color: "#00d4ff", mr: 1 }} />
             <ListItemText primary="Home" />
           </ListItem>
           {userInfo?.role === "ADMIN" && (
-            <ListItem button component={NavLink} to="/actions" onClick={toggleDrawer(false)}>
+            <>
+            <ListItem
+              button
+              component={NavLink}
+              to="/actions"
+              onClick={toggleDrawer(false)}
+            >
               <AccountCircle sx={{ color: "#ffcc00", mr: 1 }} />
               <ListItemText primary="Actions" />
             </ListItem>
+            <ListItem
+              button
+              component={NavLink}
+              to="/organisations"
+              onClick={toggleDrawer(false)}
+            >
+              <ApartmentIcon sx={{ color: "#ffcc00", mr: 1 }} />
+              <ListItemText primary="Organisations " />
+            </ListItem>
+            </>
           )}
-          <ListItem button component={NavLink} to="/history" onClick={toggleDrawer(false)}>
+          <ListItem
+            button
+            component={NavLink}
+            to="/history"
+            onClick={toggleDrawer(false)}
+          >
             <Book sx={{ color: "#ff00ff", mr: 1 }} />
             <ListItemText primary="My Bookings" />
           </ListItem>
-          <ListItem button component={NavLink} to="/about" onClick={toggleDrawer(false)}>
+          <ListItem
+            button
+            component={NavLink}
+            to="/about"
+            onClick={toggleDrawer(false)}
+          >
             <Info sx={{ color: "#00ff99", mr: 1 }} />
             <ListItemText primary="About" />
           </ListItem>

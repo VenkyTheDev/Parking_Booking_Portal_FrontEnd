@@ -30,3 +30,4 @@ export const ADD_PARKING = `${ADMIN_ROUTES}/addParking`
 
 export const ORGANISATION_ROUTES = "/api/organisations";
 export const GET_ALL_ORGANISATIONS = `${ORGANISATION_ROUTES}/all`;
+export const ADD_ORGANISATION = `${ORGANISATION_ROUTES}/add`;
