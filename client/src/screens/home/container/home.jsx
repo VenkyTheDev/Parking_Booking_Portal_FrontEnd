@@ -120,17 +120,31 @@ const Home = () => {
           p: 3,
         }}
       >
+        {(userInfo.allowedAfter > dayjs() && isNotAdmin) && (
+          <Typography variant="h6" fontWeight="bold" color="red" gutterBottom>
+          You can't be blocked till{" "}
+          {new Date(userInfo.allowedAfter).toLocaleString()}
+        </Typography>
+        )}
         <Container sx={{ textAlign: "center" }}>
           <Typography variant="h2" fontWeight="bold" color="white" gutterBottom>
             Hassle-Free Parking Just for You!
           </Typography>
-          <Typography variant="h4" fontWeight="bold" color="violet" gutterBottom>
+          <Typography
+            variant="h4"
+            fontWeight="bold"
+            color="violet"
+            gutterBottom
+          >
             Welcome Back {userInfo.name}!
           </Typography>
           <Tooltip
             title={
               hasActiveBooking && isNotAdmin
                 ? "Only one active booking per user"
+                : userInfo.allowedAfter > dayjs() && isNotAdmin
+                ? "You are blocked till " +
+                  new Date(userInfo.allowedAfter).toLocaleString()
                 : (dayjs().isBefore(minAllowedTime) ||
                     dayjs().isAfter(maxAllowedTime)) &&
                   isNotAdmin
@@ -146,6 +160,7 @@ const Home = () => {
                 onClick={() => navigate("/parkings")}
                 disabled={
                   (hasActiveBooking && isNotAdmin) ||
+                  userInfo.allwedAfter > dayjs() ||
                   ((dayjs().isBefore(minAllowedTime) ||
                     dayjs().isAfter(maxAllowedTime)) &&
                     isNotAdmin)

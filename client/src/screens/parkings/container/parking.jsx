@@ -91,11 +91,13 @@ const Parkings = () => {
     const maxHour = 18; // 6:30 PM is 18:30 in 24-hour format
     const maxMinute = 30;
 
+    const minHour = 7;
+
     let availableHours = [];
     for (let hour = 1; hour <= 10; hour++) {
       const endHour = currentHour + hour;
       const isValid =
-        endHour < maxHour ||
+        (endHour < maxHour && endHour > minHour) ||
         (endHour === maxHour && currentMinutes <= maxMinute);
 
       if (isValid) {

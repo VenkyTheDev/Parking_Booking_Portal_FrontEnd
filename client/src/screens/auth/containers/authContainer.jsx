@@ -54,9 +54,23 @@ const AuthContainer = () => {
   const handleSignup = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!email || !password || password !== confirmPassword) {
-        return toast.error("Check all fields");
+    if (!email || !password) {
+        return toast.error("Check all fields",{
+          autoClose: 1000,
+        });
     }
+
+    if(password !== confirmPassword){
+      return toast.error("Passwords do not match",{
+        autoClose: 1000,
+      });
+    }
+    if(password.length < 6){
+      toast.dismiss();
+      return toast.error("Password must be atleast 6 characters long",{
+        autoClose: 1000,
+      });
+    } 
     
     if (!emailRegex.test(email)) {
         return toast.error("Enter a valid email address");
@@ -66,6 +80,10 @@ const AuthContainer = () => {
         const response = await signup(name, email, password, organisationId);
         console.log("This is the response from " , response);
         setUserInfo(response.data);
+        toast.dismiss();
+        toast.success("Signup successful" , {
+          autoClose: 1000,
+        });
         navigate("/home");
     } catch {
         toast.error("Signup failed");
