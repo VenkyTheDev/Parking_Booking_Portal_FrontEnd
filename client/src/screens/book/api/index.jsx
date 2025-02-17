@@ -9,7 +9,7 @@ export const bookParkingSlot = async (userId, parkingId, startTime, endTime, lat
       { userId, parkingId, startTime, endTime, latitude, longitude },
       { withCredentials: true }
     );
-
+    console.log("this is resp" , response);
     return response.data;
   } catch (error) {
     throw new Error("Failed to book parking.");

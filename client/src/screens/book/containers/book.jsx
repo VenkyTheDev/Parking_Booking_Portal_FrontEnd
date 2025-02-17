@@ -79,7 +79,12 @@ const Book = () => {
       } else if (response.errorMessage === "No available slots!") {
         const nearestSlot = await getNearestSlot(parkingId, startTimeFormatted, endTimeFormatted);
         toast.info("The nearest available slot is at " + nearestSlot, { autoClose: 5000 });
-      } else {
+      } else if (response.statusCode === 403) {
+        toast.error(response.errorMessage) , {
+          autoClose: 1000,
+        };
+      }
+      else {
         toast.success("Booking successful!");
         navigate("/home");
       }
