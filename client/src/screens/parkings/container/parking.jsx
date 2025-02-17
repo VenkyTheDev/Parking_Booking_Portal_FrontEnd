@@ -55,8 +55,8 @@ const Parkings = () => {
       state: {
         parkingId: parking.id,
         parkingName: parking.name,
-        parkingLatitude: parking.location.coordinates[1],
-        parkingLongitude: parking.location.coordinates[0],
+        parkingLatitude: parking.location?.coordinates[1],
+        parkingLongitude: parking.location?.coordinates[0],
         parkingImage: parking.parkingImage,
       },
     });
@@ -69,8 +69,8 @@ const Parkings = () => {
         parkingName: parking.name,
         parkingImage: parking.parkingImage,
         parkingSlots: parking.highestSlots,
-        parkingLatitude: parking.location.coordinates[1],
-        parkingLongitude: parking.location.coordinates[0],
+        parkingLatitude: parking.location?.coordinates[1],
+        parkingLongitude: parking.location?.coordinates[0],
       },
     });
   };
