@@ -52,7 +52,9 @@ const EditParking = () => {
         setLatitude(position.coords.latitude);
         setLongitude(position.coords.longitude);
         toast.dismiss();
-        toast.success("Location fetched successfully!");
+        toast.success("Location fetched successfully!",{
+          autoClose:1000
+        });
       },
       () => toast.error("Failed to fetch location.")
     );
@@ -61,7 +63,9 @@ const EditParking = () => {
   const handleSave = async () => {
     try {
       await updateParking({ id: parkingId, highestSlots, name, latitude, longitude });
-      toast.success("Parking updated successfully!");
+      toast.success("Parking updated successfully!",{
+        autoClose:1000
+      });
       navigate("/parkings");
     } catch (error) {
       toast.error(error.message);
