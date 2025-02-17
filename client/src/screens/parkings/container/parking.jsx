@@ -25,9 +25,9 @@ const Parkings = () => {
   const [parkingSpots, setParkingSpots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedHours, setSelectedHours] = useState(1);
+  const [selectedHours, setSelectedHours] = useState(null);
   const [endTime, setEndTime] = useState(
-    dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm:ss")
+    dayjs().hour(18).minute(30).second(0).format("YYYY-MM-DDTHH:mm:ss")
   );
 
   useEffect(() => {
@@ -151,7 +151,7 @@ const Parkings = () => {
                 Get the available parking spots for the next
               </Typography>
               <select
-                value={selectedHours}
+                value={selectedHours || ""}
                 onChange={handleEndTimeChange}
                 style={{
                   padding: "10px",
@@ -163,6 +163,10 @@ const Parkings = () => {
                   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
                 }}
               >
+                <option value="" disabled>
+                  Select Hours
+                </option>
+
                 {availableHours.map((hour) => (
                   <option key={hour} value={hour}>
                     {hour} Hour{hour > 1 ? "s" : ""}
