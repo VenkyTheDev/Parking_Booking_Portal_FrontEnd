@@ -67,7 +67,7 @@ const AuthContainer = () => {
         const response = await signup(name, email, password, organisationId);
         console.log("This is the response from " , response);
         setUserInfo(response.data);
-        navigate("/auth");
+        navigate("/home");
     } catch {
         toast.error("Signup failed");
     }
