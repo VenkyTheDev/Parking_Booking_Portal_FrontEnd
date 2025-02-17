@@ -122,7 +122,7 @@ const Home = () => {
       >
         {(userInfo.allowedAfter > dayjs() && isNotAdmin) && (
           <Typography variant="h6" fontWeight="bold" color="red" gutterBottom>
-          You can't be blocked till{" "}
+          You can't book till{" "}
           {new Date(userInfo.allowedAfter).toLocaleString()}
         </Typography>
         )}
