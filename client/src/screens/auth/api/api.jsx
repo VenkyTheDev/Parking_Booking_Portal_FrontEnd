@@ -1,5 +1,6 @@
+import { toast } from "react-toastify";
 import { apiClient } from "../../../lib/api-client";
-import { GET_ALL_ORGANISATIONS, LOGIN_ROUTE } from "../../../utils/constants";
+import { GET_ALL_ORGANISATIONS, LOGIN_ROUTE, SIGNUP_ROUTE } from "../../../utils/constants";
 
 
 
@@ -8,7 +9,8 @@ export const login = async (email, password) => {
 };
 
 export const signup = async (name, email, password, organisationId) => {
-  return apiClient.post(SIGNUP_ROUTE, { name, email, password, organisationId }, { withCredentials: true });
+  const resp = await apiClient.post(SIGNUP_ROUTE, { name, email, password, organisationId }, { withCredentials: true });
+  return resp;
 };
 
 export const fetchOrganisations = async () => {
