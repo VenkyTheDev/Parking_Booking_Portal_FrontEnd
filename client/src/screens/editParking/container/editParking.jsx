@@ -35,6 +35,7 @@ const EditParking = () => {
       if (!file) return;
       const uploadedImageUrl = await uploadParkingImage(parkingId, file);
         setImage(uploadedImageUrl);
+        toast.dismiss();    
       toast.success("Image uploaded successfully!",{
         position: "top-center",
         autoClose: 1000,
@@ -50,6 +51,7 @@ const EditParking = () => {
       (position) => {
         setLatitude(position.coords.latitude);
         setLongitude(position.coords.longitude);
+        toast.dismiss();
         toast.success("Location fetched successfully!");
       },
       () => toast.error("Failed to fetch location.")
