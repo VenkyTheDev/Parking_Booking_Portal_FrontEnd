@@ -12,6 +12,7 @@ import bgImage from "/bgImg.jpg";
 import Nav from "../../nav";
 import { useAppStore } from "../../../store";
 import { fetchBookingHistory } from "../api";
+import { BACKGROUND_THEME } from "../../../utils/constants";
 
 const History = () => {
   const [bookings, setBookings] = useState([]);
@@ -54,7 +55,7 @@ const History = () => {
           width: "100%",
           mx: "auto",
           // backgroundImage: `url(${bgImage})`,
-          backgroundColor: "#A1E3F9",
+          backgroundColor: `${BACKGROUND_THEME}`,
           backgroundSize: "cover",
           minHeight: "100vh",
         }}
@@ -88,6 +89,18 @@ const History = () => {
               page={page + 1}
               onChange={(e, value) => setPage(value - 1)}
               color="primary"
+              sx={{
+                "& .MuiPaginationItem-root": {
+                  color: "white", // Unselected page numbers will be white
+                },
+                "& .Mui-selected": {
+                  backgroundColor: "primary.main", // Selected page remains primary
+                  color: "white", // Selected text stays white
+                },
+                "& .MuiPaginationItem-root:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)", // Light hover effect
+                },
+              }}
             />
           </Box>
       </Box>

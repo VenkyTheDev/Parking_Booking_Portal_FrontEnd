@@ -7,6 +7,7 @@ import FlagDialog from "../components/fileDialog";
 import UserTable from "../components/userTable";
 import SearchBar from "../components/searchBar";
 import { flagUser, getAllProfiles } from "../api";
+import { BACKGROUND_THEME } from "../../../utils/constants";
 
 const ActionsContainer = () => {
   const [users, setUsers] = useState([]);
@@ -80,7 +81,7 @@ const ActionsContainer = () => {
   return (
     <>
       <Nav/> {/* backgroundImage: `url(${bgImage})` */}
-      <Box sx={{ p: 3, width: "100%", mx: "auto", backgroundColor : "#A1E3F9" , minHeight: "100vh" , backgroundSize: "cover",}}>
+      <Box sx={{ p: 3, width: "100%", mx: "auto", backgroundColor : `${BACKGROUND_THEME}` , minHeight: "100vh" , backgroundSize: "cover",}}>
         <Box sx={{ p: 3, borderRadius: "15px", boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)", textAlign: "center" }}>
           <Typography variant="h4" fontWeight="bold" gutterBottom>
             Manage Users

@@ -6,6 +6,7 @@ import Nav from "../../nav";
 import { addParking, uploadParkingImage } from "../api";
 import { useAppStore } from "../../../store";
 import ParkingForm from "../component/parkingForm";
+import { BACKGROUND_THEME } from "../../../utils/constants";
 
 const AddParking = () => {
   const { userInfo } = useAppStore();
@@ -64,7 +65,7 @@ const AddParking = () => {
   return (
     <>
       <Nav />
-      <Box sx={{ minHeight: "100vh", backgroundColor : "#A1E3F9", backgroundSize: "cover", backgroundPosition: "center", p: 4, display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <Box sx={{ minHeight: "100vh", backgroundColor : `${BACKGROUND_THEME}`, backgroundSize: "cover", backgroundPosition: "center", p: 4, display: "flex", flexDirection: "column", alignItems: "center" }}>
         <ParkingForm
           name={name}
           setName={setName}

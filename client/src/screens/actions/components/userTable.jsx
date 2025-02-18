@@ -9,7 +9,9 @@ import {
   Paper,
   Button,
   CircularProgress,
+  Avatar,
 } from "@mui/material";
+import { HOST } from "../../../utils/constants";
 
 const UserTable = ({ users, handleFlagClick, loading, selectedUser }) => {
   return (
@@ -30,6 +32,11 @@ const UserTable = ({ users, handleFlagClick, loading, selectedUser }) => {
               sx={{ color: "white", fontWeight: "bold", bgcolor: "#1976D2" }}
             >
               S.No
+            </TableCell>
+            <TableCell
+              sx={{ color: "white", fontWeight: "bold", bgcolor: "#1976D2" }}
+            >
+              Profile 
             </TableCell>
             <TableCell
               sx={{ color: "white", fontWeight: "bold", bgcolor: "#1976D2" }}
@@ -56,6 +63,11 @@ const UserTable = ({ users, handleFlagClick, loading, selectedUser }) => {
                 sx={{ "&:nth-of-type(odd)": { bgcolor: "#F3F4F6" } }}
               >
                 <TableCell>{index + 1}</TableCell>
+                <TableCell>
+                <Avatar src={`${HOST}${user.profilePic}`} sx={{ bgcolor: "#ff7043" }}>
+                  {!user.profilePic && user.name?.charAt(0)}
+                </Avatar>
+                </TableCell>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>

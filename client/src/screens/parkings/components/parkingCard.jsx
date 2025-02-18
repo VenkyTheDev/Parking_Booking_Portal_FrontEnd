@@ -61,7 +61,7 @@ const ParkingCard = ({ parking, endTime, userInfo, onSelect, onEdit, onNavigate 
         </Typography>
 
         {/* Capacity and Available Slots (Aligned Left & Right, Numbers Centered Below) */}
-        <Box display="flex" justifyContent="space-between" alignItems="center" mt={1} px={1}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mt={0} px={0}>
           {/* Total Capacity (Left) */}
           <Box display="flex" flexDirection="column" alignItems="flex-start">
             <Box display="flex" alignItems="center">
@@ -111,7 +111,7 @@ const ParkingCard = ({ parking, endTime, userInfo, onSelect, onEdit, onNavigate 
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            mt: 1.5,
+            mt: 0.5,
           }}
         >
           <Typography variant="body2" fontWeight="bold">
@@ -120,7 +120,7 @@ const ParkingCard = ({ parking, endTime, userInfo, onSelect, onEdit, onNavigate 
         </Box>
 
         {/* Booking & Actions Section */}
-        <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mt={1}>
           {/* BOOK Button (Takes More Space) */}
           <Tooltip
             title={parking.availableSlots === 0 && userInfo.role !== "ADMIN" ? "No available slots" : ""}

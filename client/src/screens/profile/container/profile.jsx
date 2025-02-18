@@ -7,7 +7,7 @@ import ProfileForm from "../component/profileForm";
 import bgImage from "/bgImg.jpg";
 import Nav from "../../nav";
 import { useAppStore } from "../../../store";
-import { HOST } from "../../../utils/constants";
+import { HOST, BACKGROUND_THEME } from "../../../utils/constants";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -74,7 +74,7 @@ const Profile = () => {
   return (
     <>
       <Nav />
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor : "#A1E3F9", backgroundSize: "cover" }}>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor : `${BACKGROUND_THEME}`, backgroundSize: "cover" }}>
         <ProfileForm
           name={name}
           setName={setName}

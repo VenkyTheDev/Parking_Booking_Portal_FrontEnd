@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { login, signup, fetchOrganisations } from "../api/api"
 import AuthForm from "../components/authForm";
 import { useAppStore } from "../../../store";
+import { BACKGROUND_THEME } from "../../../utils/constants";
 
 const AuthContainer = () => {
   const navigate = useNavigate();
@@ -92,7 +93,7 @@ const AuthContainer = () => {
 
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" height="100vh" sx={{ backgroundColor: "#A1E3F9" ,backgroundSize: "cover"}}>
+    <Box display="flex" justifyContent="center" alignItems="center" height="100vh" sx={{ backgroundColor: `${BACKGROUND_THEME}` ,backgroundSize: "cover"}}>
       <AuthForm {...{ tabIndex, setTabIndex, email, setEmail, password, setPassword, confirmPassword, setConfirmPassword, organisationId, setOrganisationId, organisations, name, setName, handleLogin, handleSignup, loading, error }} />
     </Box>
   );

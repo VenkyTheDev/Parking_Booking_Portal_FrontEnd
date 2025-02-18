@@ -18,6 +18,7 @@ import { useAppStore } from "../../../store";
 import bgImage from "/bgImg.jpg";
 import dayjs from "dayjs";
 import { fetchParkingSpots } from "../api";
+import { BACKGROUND_THEME } from "../../../utils/constants";
 
 const Parkings = () => {
   const navigate = useNavigate();
@@ -118,7 +119,7 @@ const Parkings = () => {
         sx={{
           minHeight: "100vh",
           //   backgroundImage: `url(${bgImage})`,
-          backgroundColor: "#A1E3F9",
+          backgroundColor: `${BACKGROUND_THEME}`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -149,7 +150,7 @@ const Parkings = () => {
             </Typography>
           ) : (
             <>
-              <Typography sx={{ mr: 1, fontWeight: "600" }}>
+              <Typography sx={{ mr: 1, fontWeight: "600", color: "#fff" }}>
                 Get the available parking spots for the next
               </Typography>
               <select

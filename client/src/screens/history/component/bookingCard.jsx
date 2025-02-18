@@ -57,11 +57,16 @@ const BookingCard = ({ booking }) => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Avatar
-              alt="Profile Picture"
-              src={`${HOST}${booking.user.profilePic}`}
-              sx={{ width: 40, height: 40 }}
-            />
+            <Tooltip title={booking.user.name}>    
+              <Avatar
+                alt="Profile Picture"
+                src={`${HOST}${booking.user.profilePic}`}
+                sx={{ width: 40, height: 40, bgcolor: "#ff7043" }}
+                >
+                  {!booking.user.profilePic && booking.user.name?.charAt(0)}
+              </Avatar>
+
+            </Tooltip>
             <DirectionsCarIcon fontSize="large" sx={{ color: statusColor }} />
           </Box>
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -88,7 +93,7 @@ const BookingCard = ({ booking }) => {
               left: `${startPosition}%`,
               width: `${timelineWidth}%`,
               height: "100%",
-              background: `linear-gradient(90deg, ${statusColor}, transparent)`,
+              background: `linear-gradient(10deg, ${statusColor}, transparent)`,
               borderRadius: 5,
             }}
           />

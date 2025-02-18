@@ -8,6 +8,7 @@ import {
   CircularProgress,
   Alert,
   Tooltip,
+  Avatar,
 } from "@mui/material";
 import bgImage from "/bgImg.jpg";
 import RescheduleDialog from "../components/rescheduleDialog";
@@ -17,6 +18,7 @@ import { useAppStore } from "../../../store";
 import { cancelBooking, fetchActiveBookings, rescheduleBooking } from "../api";
 import BookingCard from "../components/bookingCard";
 import dayjs from "dayjs";
+import { HOST, BACKGROUND_THEME } from "../../../utils/constants";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -98,14 +100,10 @@ const Home = () => {
   const hasActiveBooking = activeBookings.length > 0;
   const isNotAdmin = userInfo.role !== "ADMIN";
 
-  console.log("Current Time:", dayjs().format("HH:mm"));
-  console.log("Max Allowed Time:", maxAllowedTime.format("HH:mm"));
-  console.log("Is After 6:30 PM?", dayjs().isAfter(maxAllowedTime));
-  console.log("Is Not Admin:", isNotAdmin);
 
   return (
     <>
-      <Nav /> {/* backgroundImage: `url(${bgImage})` */}
+      <Nav />
       <Box
         sx={{
           minHeight: "100vh",
@@ -115,7 +113,7 @@ const Home = () => {
           flexDirection: "column",
           textAlign: "center",
           backgroundSize: "cover",
-          backgroundColor: "#A1E3F9",
+          backgroundColor: `${BACKGROUND_THEME}`,
           color: "white",
           p: 3,
         }}
@@ -126,6 +124,14 @@ const Home = () => {
           {new Date(userInfo.allowedAfter).toLocaleString()}
         </Typography>
         )}
+        {userInfo.profilePic && (
+          <Avatar
+            src={`${HOST}${userInfo.profilePic}`}
+            sx={{ width: 100, height: 100 , objectFit: "cover",bgcolor: "#ff7043",}}
+          >
+            {!userInfo.profilePic && userInfo.name?.charAt(0)}
+          </Avatar>
+        )}
         <Container sx={{ textAlign: "center" }}>
           <Typography variant="h2" fontWeight="bold" color="white" gutterBottom>
             Hassle-Free Parking Just for You!
@@ -133,7 +139,7 @@ const Home = () => {
           <Typography
             variant="h4"
             fontWeight="bold"
-            color="violet"
+            color="#ffc0c0"
             gutterBottom
           >
             Welcome Back {userInfo.name}!

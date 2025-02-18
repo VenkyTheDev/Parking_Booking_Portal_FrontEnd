@@ -4,6 +4,7 @@ import { addOrganisation } from "../api";
 import { Box, Container, Typography } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import { useNavigate } from "react-router-dom";
+import { BACKGROUND_THEME } from "../../../utils/constants";
 const OrganisationContainer = () => {
     const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -56,7 +57,7 @@ const OrganisationContainer = () => {
   return (
     <Box
       sx={{
-        backgroundColor: "#A1E3F9",
+        backgroundColor: `${BACKGROUND_THEME}`,
         minHeight: "100vh", // Full screen height
         width: "100vw", // Full screen width
         display: "flex",
@@ -66,7 +67,7 @@ const OrganisationContainer = () => {
     >
       <Container
         className="flex items-center justify-center min-h-screen"
-        sx={{ backgroundColor: "#A1E3F9" }}
+        sx={{ backgroundColor: `${BACKGROUND_THEME}` }}
       >
         <Grid2>
           {successMessage && (

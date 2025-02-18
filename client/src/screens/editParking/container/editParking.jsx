@@ -7,7 +7,7 @@ import bgImage from "/bgImg.jpg";
 import { uploadParkingImage, updateParking } from "../api";
 import EditParkingForm from "../components/editParkingForm";
 import { useAppStore } from "../../../store";
-import { HOST } from "../../../utils/constants";
+import { HOST, BACKGROUND_THEME } from "../../../utils/constants";
 
 const EditParking = () => {
   const navigate = useNavigate();
@@ -75,7 +75,7 @@ const EditParking = () => {
   return (
     <>
       <Nav />
-      <Box sx={{ minHeight: "100vh", backgroundColor : "#A1E3F9", backgroundSize: "cover", backgroundPosition: "center", p: 4, display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <Box sx={{ minHeight: "100vh", backgroundColor : `${BACKGROUND_THEME}`, backgroundSize: "cover", backgroundPosition: "center", p: 4, display: "flex", flexDirection: "column", alignItems: "center" }}>
         <EditParkingForm {...{ name, setName, highestSlots, setHighestSlots, latitude, setLatitude, longitude, setLongitude, handleFetchLocation, handleSave, handleImageUpload, image }} />
       </Box>
     </>

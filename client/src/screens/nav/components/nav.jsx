@@ -40,7 +40,7 @@ const NavComponent = ({
     <AppBar
       position="fixed"
       sx={{
-        background: "linear-gradient(135deg, #1a1a2e, #16213e)",
+        background: "#222831",
         boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
       }}
     >
@@ -78,9 +78,10 @@ const NavComponent = ({
               fontWeight="normal"
               sx={{
                 textTransform: "uppercase",
-                fontFamily: "'Lora', serif",
+                fontFamily: "'Playfair Display', serif",
                 letterSpacing: "1.5px",
-                fontSize: "1.5rem",
+                fontSize: "1.8rem",
+                fontWeight: "bold",
                 lineHeight: 1.6,
                 opacity: 0.9,
                 textShadow: "1px 1px 4px rgba(0, 0, 0, 0.1)",

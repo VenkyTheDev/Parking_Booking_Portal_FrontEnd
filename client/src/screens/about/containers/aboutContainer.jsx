@@ -4,6 +4,7 @@ import bgImage from "/bgImg.jpg";
 import { aboutDetails } from "../containers/aboutData.js";
 import FaqItem from "../components/faqItems.jsx";
 import Nav from "../../nav";
+import { BACKGROUND_THEME } from "../../../utils/constants";
 
 const About = () => {
   return (
@@ -17,7 +18,7 @@ const About = () => {
           justifyContent: "center",
           alignItems: "center",
           // backgroundImage: `url(${bgImage})`,
-          backgroundColor : "#A1E3F9",
+          backgroundColor : `${BACKGROUND_THEME}`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

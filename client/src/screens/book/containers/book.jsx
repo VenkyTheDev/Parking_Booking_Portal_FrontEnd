@@ -92,7 +92,7 @@ const Book = () => {
       }
     } catch (error) {
       toast.error(error.message, { autoClose: 1000 });
-      navigate("/home");
+      // navigate("/home");
     }
   };
 
